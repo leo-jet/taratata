@@ -1,0 +1,60 @@
+<section>
+  <q-toolbar color="green">
+    <q-toolbar-title>
+      <b>Cours: </b>{{$store.state.classe.classe.nom}}
+    </q-toolbar-title>
+  </q-toolbar>
+  <div v-if="$q.platform.is.mobile">
+    <div style="padding: 10px" v-for="(chapitre, index) in chapitres" :key="index">
+      <q-card>
+        <q-toolbar color="primary">
+          <q-toolbar-title>
+            {{chapitre.label}}
+          </q-toolbar-title>
+        </q-toolbar>
+        <q-card-main>
+          <p>Nombre de sections: {{chapitre.data.sections.length}}</p>
+          <p>Nombre de quiz: {{chapitre.data.devoirs.length}} </p>
+          <p>Progression : </p>
+        </q-card-main>
+        <q-card-separator />
+        <q-card-actions align="around">
+          <q-btn color="secondary" style="width:30%;" @click="demarrer(chapitre)">Demarrer</q-btn>
+          <q-btn color="primary" style="width:30%;" @click="quizs(chapitre)">Quiz</q-btn>
+        </q-card-actions>
+      </q-card>
+    </div>
+  </div>
+  <div v-else>
+    <div class="row">
+      <div class="col-4" style="padding: 10px; float: left;" v-for="(chapitre, index) in chapitres" :key="index">
+        <q-card>
+          <!--<q-card-media>
+                                      <img src="assets/img/donuts.png">
+                                  </q-card-media>-->
+          <q-toolbar color="primary">
+            <q-toolbar-title>
+              {{chapitre.label}}
+            </q-toolbar-title>
+          </q-toolbar>
+          <q-card-main>
+            <p>Nombre de sections: {{chapitre.data.sections.length}}</p>
+            <p>Nombre de quiz: {{chapitre.data.devoirs.length}} </p>
+            <p>Progression : </p>
+          </q-card-main>
+          <q-card-separator />
+          <q-card-actions align="around">
+            <q-btn color="secondary" style="width:30%;" @click="demarrer(chapitre)">Demarrer</q-btn>
+            <q-btn color="primary" style="width:30%;" @click="quizs(chapitre)">Quiz</q-btn>
+          </q-card-actions>
+        </q-card>
+      </div>
+    </div>
+  </div>
+  <div v-if="maximizedModalChapitre">
+    <chapitre :maximizedModalChapitre.sync="maximizedModalChapitre" :nomChapitre.sync="nomChapitre"></chapitre>
+  </div>
+  <div v-if="maximizedModalQuiz">
+    <liste-quiz :maximizedModalQuiz.sync="maximizedModalQuiz" :devoirs.sync="chapdevoirs"></liste-quiz>
+  </div>
+</section>

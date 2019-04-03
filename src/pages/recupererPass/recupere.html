@@ -1,0 +1,41 @@
+<div class="row justify-center">
+  <div :class="{'col-10': $q.platform.is.mobile, 'col-6': $q.platform.is.desktop}">
+    <q-card style="margin-top: 30px">
+      <q-card-title>
+        Valider votre compte
+      </q-card-title>
+      <q-card-separator />
+      <q-card-main>
+        <div class="justify-center">
+          <div class="column">
+            <div class="col-6">
+              <q-input prefix="Nom:" disable v-model="nom" rows="7" />
+            </div>
+            <div class="col-6">
+              <q-input v-model="prenom" disable prefix="Prénom:" rows="7" />
+            </div>
+            <div class="col-6">
+              <q-input v-model="numero" disable prefix="Numero:" rows="7" />
+            </div>
+            <div class="col-6">
+              <q-input v-model="code" prefix="Code:" rows="7" />
+            </div>
+          </div>
+          <div class="row" style="padding:10px">
+            <div class="col-6">
+              <q-btn color="green" label="Se connecter" @click.native="enregistrement()"></q-btn>
+            </div>
+            <div class="col-6">
+              <q-btn color="red" label="Annuler" @click.native="seConnecter()"></q-btn>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              Vous avez déjà un compte? <a href="/profil/login">Connectez-vous!</a>
+            </div>
+          </div>
+        </div>
+      </q-card-main>
+    </q-card>
+  </div>
+</div>

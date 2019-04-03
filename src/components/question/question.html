@@ -1,0 +1,35 @@
+<div style="padding: 10px">
+  <q-card>
+    <q-card>
+      <q-toolbar dark color="primary">
+        <q-toolbar-title>
+          # {{question.idQuestion}}
+        </q-toolbar-title>
+        <q-btn round color="green" icon="add" @click.native="ajouter(question)"></q-btn>
+      </q-toolbar>
+      <q-card-media v-if="question.type=='schema'">
+        <img :src="question.image">
+      </q-card-media>
+      <q-card-separator />
+      <q-card-main>
+        <div>
+          Enoncé
+          <p>{{question.enonce}}</p>
+        </div>
+        <div v-if="question.type=='qcm'">
+          Propositions
+          <p v-for="(proposition, index) in question.propositions" :key="index">
+            {{proposition.enonce}}
+          </p>
+        </div>
+        <div v-if="question.type=='schema'">
+          Propositions
+          <p v-for="(proposition, index) in question.propositions" :key="index">
+            <q-chip dense square pointing="right" color="primary">{{proposition.numero}}</q-chip>
+            <q-chip dense square pointing="left" color="primary">{{proposition.reponse}}</q-chip>
+          </p>
+        </div>
+      </q-card-main>
+    </q-card>
+  </q-card>
+</div>

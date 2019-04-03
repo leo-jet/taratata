@@ -1,0 +1,41 @@
+<section>
+  <q-modal v-model="maximizedModalQuiz" maximized>
+    <q-layout view="lHh Lpr lFf">
+      <q-layout-header>
+        <q-toolbar :inverted="$q.theme === 'ios'">
+          <q-btn flat round dense icon="fas fa-arrow-alt-circle-left" @click="close()" />
+          <q-toolbar-title>
+            <b>Cours: </b>{{$store.state.classe.classe.nom}}
+          </q-toolbar-title>
+        </q-toolbar>
+      </q-layout-header>
+      <q-page-container>
+        <div class="row justify-center" style="padding-top: 20px">
+          <div :class="{'col-8': $q.platform.is.desktop === true, 'col-11': $q.platform.is.mobile === true}">
+            <q-list link>
+              <q-list-header>Liste de quiz {{$q.platform.is.desktop}}</q-list-header>
+              <q-item link tag="label" v-for="(quiz, index) in quizs" :key="index">
+                <q-item-side hidden>
+                  <q-btn @click="showConsigne(quiz)">aller</q-btn>
+                </q-item-side>
+                <q-item-main>
+                  <q-item-tile label>{{quiz.titre}} | {{get_statistiques(quiz.quizz.idQuizz)}}</q-item-tile>
+                  <q-item-tile sublabel>Fin: {{quiz.dateFin}} | Essai: {{quiz.nombreEssai}}</q-item-tile>
+                </q-item-main>
+                <q-item-side right>
+                  <q-item-tile stamp>{{quiz.duree}}</q-item-tile>
+                  <q-item-tile>
+                    <q-rating color="yellow" v-model="ratingModel" :max="5" icon="star" />
+                  </q-item-tile>
+                </q-item-side>
+              </q-item>
+            </q-list>
+          </div>
+        </div>
+      </q-page-container>
+      <div v-if="maximizedModalConsigne">
+        <consigne :maximizedModalConsigne.sync="maximizedModalConsigne"></consigne>
+      </div>
+    </q-layout>
+  </q-modal>
+</section>

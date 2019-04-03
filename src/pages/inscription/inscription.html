@@ -1,0 +1,55 @@
+<div class="row justify-center">
+  <div :class="{'col-10': $q.platform.is.mobile, 'col-6': $q.platform.is.desktop}">
+    <q-card style="margin-top: 30px">
+      <q-card-title>
+        Inscription
+      </q-card-title>
+      <q-card-separator />
+      <q-card-main>
+        <div class="justify-center">
+          <form ref="form">
+            <div class="column">
+              <div class="col-6">
+                <q-field :error="$v.nom.$invalid" error-label="Obligatoire ou Numero incorrect">
+                  <q-input float-label="Nom" v-model="nom" />
+                </q-field>
+              </div>
+              <div class="col-6">
+                <q-field :error="$v.prenom.$invalid" error-label="Obligatoire ou Numero incorrect">
+                  <q-input v-model="prenom" float-label="Prénom" />
+                </q-field>
+              </div>
+              <div class="col-6">
+                <q-field :error="$v.numero.$invalid" error-label="Obligatoire ou Numero incorrect">
+                  <q-input v-model="numero" float-label="Numero" />
+                </q-field>
+              </div>
+              <div class="col-6">
+                <q-field :error="$v.pass.$invalid" error-label="Obligatoire ou Numero incorrect">
+                  <q-input v-model="pass" float-label="Mot de pass" />
+                </q-field>
+              </div>
+              <div class="col-6">
+                <q-field :error="$v.confirmation.$invalid" error-label="Obligatoire ou Numero incorrect">
+                  <q-input v-model="confirmation" float-label="Confirmation" />
+                </q-field>
+              </div>
+            </div>
+            <div class="row" style="padding:10px">
+              <div class="col-12">
+                <q-btn color="green" class="q-ml-sm" :disable="$v.$invalid" label="Se connecter"
+                  @click.native="enregistrement()"></q-btn>
+                <q-btn flat color="red" class="q-ml-sm" label="Annuler" @click="annuler()"></q-btn>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                Vous avez déjà un compte? <a href="/profil/login">Connectez-vous!</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </q-card-main>
+    </q-card>
+  </div>
+</div>

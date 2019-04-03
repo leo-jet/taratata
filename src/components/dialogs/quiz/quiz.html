@@ -1,0 +1,155 @@
+<section>
+  <q-modal v-model="maximizedModalQuiz" maximized>
+    <q-layout view="lHh Lpr lFf">
+      <q-layout-header>
+        <q-toolbar :inverted="$q.theme === 'ios'">
+          <q-toolbar-title>
+            {{$store.state.quiz.quiz.titre}}
+            <span slot="subtitle">
+              <span id="time" v-html="time"></span>
+            </span>
+          </q-toolbar-title>
+          # {{indiceQuestionCourante + 1}}/ {{questions.length}}
+          <q-btn round style="margin-left:10px;" @click="showQuestions()" color="green" icon="menu" />
+        </q-toolbar>
+      </q-layout-header>
+      <q-page-container>
+        <div class="row justify-center">
+          <div :class="{'col-8': $q.platform.is.desktop === true, 'col-11': $q.platform.is.mobile === true}">
+            <q-card disable>
+              <q-card-main
+                v-if="questions[indiceQuestionCourante].propositions.type == 'qcm' || questions[indiceQuestionCourante].propositions.type == 'qcu'">
+                <q-card class="cardClass" style="width: 100%">
+                  <q-card-title>
+                    <q-toolbar>
+                      <q-toolbar-title>
+                        Enonce {{$q.platform.is.mobile}}
+                      </q-toolbar-title>
+                      <q-icon round color="info" name="fas fa-question" />
+                    </q-toolbar>
+                  </q-card-title>
+                  <q-card-main>
+                    {{questions[indiceQuestionCourante].enonce}}
+                  </q-card-main>
+                </q-card>
+                <q-card class="cardClass" style="width: 100%">
+                  <q-card-title>
+                    <span slot="subtitle">Propositions</span>
+                  </q-card-title>
+                  <q-card-main>
+                    <q-card
+                      :class="{'cardClassError': (proposition.checked == true && proposition.checked != proposition.solution && correction == true), 'cardClassSuccess': (proposition.solution == true && correction == true), 'cardClass': (!proposition.checked && !correction), 'cardClassActive': (proposition.checked, !correction)}"
+                      v-for="(proposition, indexProposition) in questions[indiceQuestionCourante].propositions.lists"
+                      :key="proposition.id">
+                      <q-card-main>
+                        <div @click="clickProposition(indexProposition)">
+                          <q-chip color="grey" v-if="!proposition.checked" square>
+                            {{indexOfProposition(indexProposition)}}</q-chip>
+                          <q-chip color="primary" v-else square>{{indexOfProposition(indexProposition)}}</q-chip>
+                          {{proposition.enonce}}
+                        </div>
+                      </q-card-main>
+                    </q-card>
+                  </q-card-main>
+                </q-card>
+              </q-card-main>
+              <q-card-main v-if="questions[indiceQuestionCourante].propositions.type == 'croquis'">
+                <q-card class="cardClass" style="width: 100%">
+                  <q-card-title>
+                    <span slot="subtitle">Enonce</span>
+                  </q-card-title>
+                  <q-card-main padding class="docs-chip row justify-center">
+                    <q-card-media>
+                      <img :src="urlBegin(questions[indiceQuestionCourante].enonce)">
+                    </q-card-media>
+                  </q-card-main>
+                </q-card>
+                <q-card class="cardClass" style="width: 100%">
+                  <q-card-title>
+                    <span slot="subtitle">Propositions</span>
+                  </q-card-title>
+                  <q-card-main>
+                    <div  v-if="correction == false">
+                    <p v-for="(prop, index) in questions[indiceQuestionCourante].propositions.lists" :key="index"
+                      style="padding-right: 0px;padding-bottom: 5px;">
+                      <q-chip square pointing="right" color="primary">{{prop.enonce}}</q-chip>
+                      <q-chip square pointing="left" @hide="removeChip(index)"
+                        style="float: right; width: 80%;" closable v-if="prop.proposition != null">
+                        {{prop.proposition}}
+                      </q-chip>
+                      <q-select v-model="prop.proposition" style="float: right; width: 80%;" v-else
+                        :options="questions[indiceQuestionCourante].propositions.lists" />
+                    </p>
+                  </div>
+                  <div  v-else>
+                    <p v-for="(prop, index) in questions[indiceQuestionCourante].propositions.lists" :key="index"
+                      style="padding-right: 0px;padding-bottom: 5px;">
+                      <q-chip :class="{'cardClassError':  prop.proposition != prop.solution, 'cardClassSuccess': prop.solution == prop.proposition}" square pointing="right">{{prop.enonce}}</q-chip>
+                      <q-chip square pointing="left" 
+                      :class="{'cardClassError':  prop.proposition != prop.solution, 'cardClassSuccess': prop.solution == prop.proposition}"
+                        style="float: right; width: 80%;" closable v-if="prop.proposition != null">
+                        {{prop.proposition}} <span v-if="prop.proposition != prop.solution">| {{prop.solution}}</span>
+                      </q-chip>
+                      <q-chip square pointing="left" color="red"
+                        style="float: right; width: 80%;" closable v-else>
+                        {{prop.solution}}
+                      </q-chip>
+                    </p>
+                  </div>
+                  </q-card-main>
+                </q-card>
+              </q-card-main>
+              <q-card-main v-if="questions[indiceQuestionCourante].propositions.type == 'qr'">
+                <q-card class="cardClass" style="width: 100%">
+                  <q-card-title>
+                    <span slot="subtitle">Enonce</span>
+                  </q-card-title>
+                  <q-card-main padding class="docs-chip row justify-center">
+                    <div v-for="(prop, index) in questions[indiceQuestionCourante].enonce" :key="index"
+                      style="padding-right: 10px;padding-bottom: 10px;">
+                      <q-chip color="secondary" class="shadow-1">
+                        {{prop.label}}
+                      </q-chip>
+                    </div>
+                  </q-card-main>
+                </q-card>
+                <q-card class="cardClass" style="width: 100%">
+                  <q-card-title>
+                    <span slot="subtitle">Propositions</span>
+                  </q-card-title>
+                  <q-card-main>
+                    <p v-for="(prop, index) in questions[indiceQuestionCourante].propositions.lists" :key="index"
+                      style="padding-right: 0px;padding-bottom: 5px;">
+                      <q-chip square pointing="right" color="primary">{{prop.enonce}}</q-chip>
+                      <q-chip square pointing="left" color="yellow" @hide="removeChip(index)" closable
+                        v-if="prop.proposition != null">{{prop.proposition}}</q-chip>
+                      <q-select inverted v-else width="30%" color="yellow" v-model="prop.proposition"
+                        :options="questions[indiceQuestionCourante].enonce" />
+                    </p>
+                  </q-card-main>
+                </q-card>
+              </q-card-main>
+            </q-card>
+          </div>
+        </div>
+      </q-page-container>
+      <q-layout-footer>
+        <q-toolbar color="primary" dark class="elevation-0">
+          <q-btn @click="terminer()" :disable="correction" color="green" label="terminer" />
+          <q-toolbar-title>
+            <span v-if="correction == true">
+              <b>Score: </b> {{score}} / {{questions.length}}
+            </span>
+          </q-toolbar-title>
+          <q-btn flat color="yellow" v-if="indiceQuestionCourante>0" @click="previousQuestion()" icon="fas fa-step-backward" />
+          <q-btn flat color="yellow" v-if="indiceQuestionCourante != questions.length -1" @click="nextQuestion()" icon="fas fa-step-forward" />
+          |
+          <q-btn flat color="yellow" v-if="this.$data.state != 'paused'" @click="pause()" icon="fas fa-pause-circle" />
+          <q-btn flat color="yellow" v-if="this.$data.state == 'paused'" @click="resume()" icon="fas fa-redo" />
+          <q-btn flat color="red" @click="close()" icon="fas fa-stop-circle" />
+        </q-toolbar>
+      </q-layout-footer>
+    </q-layout>
+    <questions-list :questionListDrawer.sync="questionListDrawer" :questions.sync="questions"></questions-list>
+  </q-modal>
+</section>

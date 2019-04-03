@@ -1,0 +1,47 @@
+<section>
+  <div class="row" style="width: 100%; padding: 10px">
+    <div class="col-6" style="padding-right: 10px">
+      <q-input v-model="nom" float-label="Nom" rows="7" />
+    </div>
+    <div class="col-2" style="padding-right: 10px">
+      <q-datetime format-model="string" format="YYYY-MM-DD hh:mm:ss" v-model="dateDebut" type="date" default-view="year"
+        float-label="Date de debut" rows="7" />
+    </div>
+    <div class="col-2" style="padding-right: 10px">
+      <q-datetime format-model="string" format="YYYY-MM-DD hh:mm:ss" v-model="dateFin" type="date" default-view="year"
+        float-label="Date de fin" rows="7" />
+    </div>
+    <div class="col-1">
+      <q-input v-model="prix" float-label="Prix" type="number" rows="12" />
+    </div>
+    <div class="col-1 items-center">
+      <q-btn color="green" v-if="$route.params.idClasse == 'creer'" @click.native="creer()">Creer</q-btn>
+      <q-btn color="warning" v-else @click.native="modifier()">Modifier</q-btn>
+    </div>
+  </div>
+  <div v-if="$route.params.idClasse != 'creer'">
+    <q-tabs class="shadow-1" animated swipeable color="secondary" glossy align="justify">
+      <q-tab default name="information" slot="title" label="Information" />
+      <q-tab name="enseignants" slot="title" label="Enseignants" />
+      <q-tab name="eleves" slot="title" label="Eleves" />
+      <q-tab name="chapitres" slot="title" label="Chapitres" />
+      <q-tab name="quiz" slot="title" label="Quiz" />
+      <q-tab name="bilan" slot="title" label="Bilan" />
+      <q-tab-pane name="information">
+        <information></information>
+      </q-tab-pane>
+      <q-tab-pane name="enseignants">
+        <enseignants></enseignants>
+      </q-tab-pane>
+      <q-tab-pane name="eleves">
+        <eleve></eleve>
+      </q-tab-pane>
+      <q-tab-pane name="chapitres">
+        <chapitres></chapitres>
+      </q-tab-pane>
+      <q-tab-pane name="quiz">
+        <quiz></quiz>
+      </q-tab-pane>
+    </q-tabs>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+<div>
+  <div class="row">
+    <div class="col-4">
+      <q-list highlight link>
+        <q-list-header>Classes</q-list-header>
+        <q-item v-for="(classe, index) in classes" :key="classe.nom" @click.native="voirListEleve(index)">
+          <q-item-main :label="classe.nom" />
+          <q-item-side right>
+            <q-item-tile icon="notifications" color="green" />
+          </q-item-side>
+        </q-item>
+      </q-list>
+    </div>
+    <div class="col-8" style="padding-right: 10px">
+      <q-table grid hide-header :data="eleves" :pagination="pagination" hide-bottom :columns="columns" :filter="filter"
+        :visible-columns="visibleColumns" row-key="name">
+        <div slot="item" slot-scope="props" class="col-xs-12 col-sm-4 col-md-4">
+          <p>Nom: {{props.row.nom}}</p>
+          <p>Inscrit: {{props.row.inscrit}}</p>
+        </div>
+      </q-table>
+    </div>
+  </div>
+</div>

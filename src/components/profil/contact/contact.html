@@ -1,0 +1,20 @@
+<section>
+  <q-toolbar color="white" dark>
+    <q-toolbar-title>
+    </q-toolbar-title>
+    <q-btn class="q-ml-sm" v-if="!edition" @click="editer()" color="warning" round dense icon="edit" />
+    <q-btn class="q-ml-sm" v-if="edition" @click="enregistrement()" color="green" round dense icon="check" />
+    <q-btn class="q-ml-sm" v-if="edition" color="red" @click="close()" round dense icon="delete" />
+  </q-toolbar>
+  <div class="column">
+    <div class="col-6">
+      <q-input v-model="email" :disable="!edition" float-label="Email:" rows="7" />
+    </div>
+    <div class="col-6">
+      <q-input v-model="ville" :disable="!edition" float-label="Ville:" rows="7" />
+    </div>
+    <div class="col-6">
+      <q-input v-model="quartier" :disable="!edition" float-label="Quartier:" rows="7" />
+    </div>
+  </div>
+</section>

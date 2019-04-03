@@ -1,0 +1,40 @@
+<div class="row justify-center">
+  <div :class="{'col-10': $q.platform.is.mobile, 'col-6': $q.platform.is.desktop}">
+    <q-card style="margin-top: 30px">
+      <q-card-title>
+        Connexion
+      </q-card-title>
+      <q-card-separator />
+      <q-card-main>
+        <div class="justify-center">
+          <div class="column">
+            <div class="col-6">
+              <q-input v-model="username" prefix="Identifiant:" rows="7" />
+            </div>
+            <div class="col-6">
+              <q-input v-model="password" type="password" prefix="Mot de pass:" rows="7" />
+            </div>
+          </div>
+          <div class="row" style="padding:10px">
+            <div class="col-6">
+              <q-btn color="green" label="Se connecter" @click.native="seConnecter()"></q-btn>
+            </div>
+            <div class="col-6">
+              <q-btn color="red" label="Annuler" @click.native="seConnecter()"></q-btn>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 align-right">
+              <a href="/profil/inscription">Mot de pass oublié</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              Pas de compte? <a href="/profil/inscription">Inscrivez-vous!</a>
+            </div>
+          </div>
+        </div>
+      </q-card-main>
+    </q-card>
+  </div>
+</div>

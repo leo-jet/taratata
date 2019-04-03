@@ -1,0 +1,17 @@
+<section>
+  <q-layout-drawer side="right" v-model="questionListDrawer" :content-class="$q.theme === 'mat' ? 'bg-grey-3' : null">
+    <q-scroll-area class="fit">
+      <q-list highlight inset-separator>
+        <q-list-header>Questions</q-list-header>
+        <q-item v-for="(question, index) in questions" :key="index">
+          <q-item-main>
+            <div @click="chooseQuestion(index)">
+              Question {{index + 1}}
+            </div>
+          </q-item-main>
+          <q-item-side v-if="indiceQuestionCourante == index" right icon="thumb_up" />
+        </q-item>
+      </q-list>
+    </q-scroll-area>
+  </q-layout-drawer>
+</section>

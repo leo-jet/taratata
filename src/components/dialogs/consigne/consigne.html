@@ -1,0 +1,30 @@
+<section>
+  <q-modal v-model="maximizedModalConsigne" maximized>
+    <q-layout view="lHh Lpr lFf">
+      <q-layout-header>
+        <q-toolbar :inverted="$q.theme === 'ios'">
+          <q-btn flat round dense icon="fas fa-arrow-alt-circle-left" @click="close()" />
+          <q-toolbar-title>
+            {{currentquiz.titre}}
+          </q-toolbar-title>
+          <q-btn color="secondary" @click="showQuiz()">Demarrer</q-btn>
+        </q-toolbar>
+        <nav-tabs v-if="$q.theme === 'mat'" />
+      </q-layout-header>
+      <q-page-container>
+        <div class="row justify-center" style="padding-top: 20px;">
+          <div :class="{'col-8': $q.platform.is.desktop === true, 'col-10': $q.platform.is.mobile === true}">
+            <q-card color="grey">
+              <q-card-main>
+                  {{currentquiz.consignes}}
+              </q-card-main>
+            </q-card>
+          </div>
+        </div>
+      </q-page-container>
+    </q-layout>
+    <div v-if="maximizedModalQuiz">
+      <quiz :maximizedModalQuiz.sync="maximizedModalQuiz"></quiz>
+    </div>
+  </q-modal>
+</section>

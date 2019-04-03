@@ -1,0 +1,48 @@
+<div>
+  <q-modal v-model="modalChapitre">
+    <q-toolbar color="primary">
+      <q-toolbar-title>
+        Créer un nouveau chapitre
+        <div slot="subtitle">Formulaire de création d'un nouveau chapitre pour le cours </div>
+      </q-toolbar-title>
+      <q-btn color="green" @click.native="enregistrer()" style="margin-right: 10px">enregistrer</q-btn>
+      <q-btn color="red" @click.native="fermer()">fermer</q-btn>
+    </q-toolbar>
+    <div style="padding: 15px">
+      <div class="row">
+        <div class="col-12">
+          <q-input v-model.lazy="titre" float-label="Titre" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4" style="padding-right: 10px">
+          <q-datetime format-model="string" format="YYYY-MM-DD" v-model="dateDebut" type="date"
+            default-view="year" float-label="Date de debut" rows="7" />
+        </div>
+        <div class="col-4" style="padding-right: 10px">
+          <q-datetime format-model="string" format="YYYY-MM-DD" v-model="dateFin" type="date"
+            default-view="year" float-label="Date de fin" rows="7" />
+        </div>
+        <div class="col-4">
+          <q-input v-model.lazy="numero" float-label="Numéro" type="number" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <q-input v-model.lazy="description" @blur="input_description(description)" float-label="Description" type="textarea" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <q-uploader extensions=".pdf" ref="fichier" stack-label="Contenu en fichier PDF" :url="contenuFichier" auto-expand />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <q-uploader extensions=".pdf" ref="video" stack-label="Contenu en Video" :url="contenuFichier" auto-expand />
+        </div>
+      </div>
+    </div>
+    
+  </q-modal>
+</div>

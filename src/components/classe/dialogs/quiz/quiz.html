@@ -1,0 +1,46 @@
+<div>
+  <q-modal v-model="modalQuiz" maximized>
+    <q-toolbar color="primary">
+      <q-toolbar-title>
+        Créer un nouveau devoir
+        <div slot="subtitle">Formulaire de création d'un devoir </div>
+      </q-toolbar-title>
+      <q-btn color="green" @click.native="creerDevoir()" style="margin-right: 10px">Creer le devoir</q-btn>
+      <q-btn color="yellow" @click.native="fermer()" style="margin-right: 10px" label="Voir le devoir">
+        <q-chip floating color="teal">{{panier.length}}</q-chip>
+      </q-btn>
+      <q-btn color="red" @click.native="fermer()">fermer</q-btn>
+    </q-toolbar>
+    <div style="padding: 15px">
+      <div class="row">
+        <div class="col-4" style="padding-right: 10px">
+          <p class="caption">Classes | Chapitres | Sections
+            <q-btn flat color="green" @click.native="get_question()">valider</q-btn>
+          </p>
+          <div>
+            <q-input color="secondary" stack-label="Recherche" v-model="tickFilter" class="q-ma-none" clearable />
+          </div>
+          <q-tree :nodes="classes" color="secondary" default-expand-all :ticked.sync="ticked" :tick-strategy="tickStrategy"
+            :filter="tickFilter" node-key="id" />
+        </div>
+        <div class="col-8" style="padding-right: 10px">
+          <q-table grid hide-header :data="questions" :pagination="pagination" hide-bottom :columns="columns" :filter="filter"
+            :visible-columns="visibleColumns" row-key="name">
+            <template slot="top-right" slot-scope="props">
+              <q-btn flat color="green" @click.native="creerQuestion()" style="margin-right: 10px">Creer une question</q-btn>
+            </template>
+            <div slot="item" slot-scope="props" class="col-xs-12 col-sm-6 col-md-6">
+              <questionAffichage :question.sync="props.row"></questionAffichage>
+            </div>
+          </q-table>
+        </div>
+      </div>
+    </div>
+  </q-modal>
+  <div v-if="modalQuestion">
+    <question :modalQuestion.sync="modalQuestion"></question>
+  </div>
+  <div v-if="modalDevoir">
+    <devoir :modalDevoir.sync="modalDevoir"></devoir>
+  </div>
+</div>

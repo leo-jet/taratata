@@ -1,0 +1,18 @@
+<div>
+  <div class="row">
+    <div class="col-12">
+      <q-input v-model.lazy="numero" float-label="Numero" type="number" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <q-input v-model.lazy="annotation" float-label="Annotation" type="textarea" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <q-btn @click.native="creerProposition()">creer</q-btn>
+      <q-btn color="red" @click.native="fermer()">creer</q-btn>
+    </div>
+  </div>
+</div>

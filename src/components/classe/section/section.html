@@ -1,0 +1,14 @@
+<div>
+  <q-table dense grid :data="sections" :pagination="pagination" hide-bottom :columns="columns" :filter="filter" row-key="titre">
+    <template slot="body" slot-scope="props">
+      <q-tr :props="props">
+        <q-td key="numero">{{ props.row.numero }}</q-td>
+        <q-td key="intitule">{{ props.row.intitule }}</q-td>
+        <q-td key="actions">
+          <q-icon name="fas fa-edit" v-if="dialogClasse == false" color="yellow" style="margin-right: 10px"></q-icon>
+          <q-icon name="fas fa-trash-alt" v-if="dialogClasse == false" color="red"></q-icon>
+        </q-td>
+      </q-tr>
+    </template>
+  </q-table>
+</div>

@@ -1,0 +1,41 @@
+<div>
+  <q-modal v-model="modalSection">
+    <q-toolbar color="primary">
+      <q-toolbar-title>
+        Créer une nouvelle section
+        <div slot="subtitle">Formulaire de création d'un nouveau chapitre pour le cours </div>
+      </q-toolbar-title>
+      <q-btn color="green" @click.native="enregistrer()" style="margin-right: 10px">enregistrer</q-btn>
+      <q-btn color="red" @click.native="fermer()">fermer</q-btn>
+    </q-toolbar>
+    <div style="padding: 15px" ref="first">
+      <div class="row">
+        <div class="col-12">
+          <q-input v-model.lazy="intitule" float-label="Intitule" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4" style="padding: 15px">
+          <q-input v-model.lazy="numero" float-label="Numéro" type="number" />
+        </div>
+        <div class="col-4" style="padding: 15px">
+          <q-uploader extensions=".pdf" ref="fichier" stack-label="Contenu en fichier PDF" :url="contenuFichier"
+            auto-expand />
+        </div>
+        <div class="col-4" style="padding: 15px">
+          <q-uploader extensions=".pdf" ref="video" stack-label="Contenu en Video" :url="contenuFichier" auto-expand />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <quill-editor v-model="content" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur($event)"
+            @focus="onEditorFocus($event)" @ready="onEditorReady($event)" @change="onEditorChange($event)">
+          </quill-editor>
+        </div>
+        <div class="col-6">
+          <span ref="myContent" v-html="content"></span>
+        </div>
+      </div>
+    </div>
+  </q-modal>
+</div>

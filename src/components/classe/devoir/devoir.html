@@ -1,0 +1,24 @@
+<div>
+  <q-table dense grid :data="devoirs" :pagination="pagination" hide-bottom :columns="columns" :filter="filter" row-key="titre">
+    <template slot="body" slot-scope="props">
+      <q-tr :props="props">
+        <q-td key="numero">{{ props.row.numero }}</q-td>
+        <q-td key="titre">{{ props.row.titre }}</q-td>
+        <q-td key="dateDebut">{{ props.row.dateDebut }}</q-td>
+        <q-td key="dateDin">{{ props.row.dateFin }}</q-td>
+        <q-td key="actions">
+          <q-checkbox color="primary" v-model="props.expand" checked-icon="fas fa-list-ol" unchecked-icon="fas fa-list-ol"
+            class="q-mr-md" />
+          <q-icon name="fas fa-edit" color="yellow" style="margin-right: 10px"></q-icon>
+          <q-icon name="fas fa-trash-alt" color="red"></q-icon>
+        </q-td>
+      </q-tr>
+      <q-tr v-show="props.expand" :props="props">
+        <q-td colspan="100%">
+          <div class="text-left">Liste des devoirs du chapitre {{ props.row.titre }}.</div>
+          <devoir :chapitreID.sync="props.row.id"></devoir>
+        </q-td>
+      </q-tr>
+    </template>
+  </q-table>
+</div>

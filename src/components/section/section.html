@@ -1,0 +1,12 @@
+<section>
+  <div class="row justify-center" ref="contentSection" style="padding: 10px">
+    <div class="col-12" v-if="$q.platform.is.mobile">
+      <span v-html="section.contenu"></span>
+    </div>
+    <div class="col-8" v-else>
+        <span v-html="section.contenu"></span>
+      </div>
+  </div>
+  <!--<pdfviewer height="500px" :url="pathfile">-->
+  </pdfviewer>
+</section>

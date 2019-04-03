@@ -1,0 +1,45 @@
+<section>
+  <q-toolbar color="light-blue-3">
+    <q-toolbar-title>
+      Poste: Enseignant
+    </q-toolbar-title>
+    <q-list style="border: 0px">
+      <q-item>
+        <q-item-main>
+          <q-item-tile label>{{nb_classe}}</q-item-tile>
+          <q-item-tile sublabel>Classes</q-item-tile>
+        </q-item-main>
+      </q-item>
+    </q-list>
+    <q-list style="border: 0px">
+      <q-item>
+        <q-item-main>
+          <q-item-tile label>4</q-item-tile>
+          <q-item-tile sublabel>Elèves</q-item-tile>
+        </q-item-main>
+      </q-item>
+    </q-list>
+    <q-list style="border: 0px">
+      <q-item>
+        <q-item-main>
+          <q-item-tile label>120 000 FCFA</q-item-tile>
+          <q-item-tile sublabel>Porte-monnaie</q-item-tile>
+        </q-item-main>
+      </q-item>
+    </q-list>
+  </q-toolbar>
+  <q-tabs class="shadow-1" animated swipeable color="secondary" glossy align="justify">
+    <q-tab default name="information" slot="title" label="Mes information" />
+    <q-tab name="classes" slot="title" label="Mes classes" />
+    <q-tab name="movies" slot="title" label="Mes devoirs" />
+    <q-tab name="banques" slot="title" label="Banque quiz" />
+
+    <q-tab-pane name="information">
+      <information></information>
+    </q-tab-pane>
+    <q-tab-pane name="classes">
+      <classes></classes>
+    </q-tab-pane>
+    <q-tab-pane name="movies">Movies tab</q-tab-pane>
+  </q-tabs>
+</section>

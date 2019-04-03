@@ -1,0 +1,40 @@
+<div>
+  <q-table grid :data="chapitres" :pagination="pagination" hide-bottom :columns="columns" :filter="filter" row-key="titre">
+    <template slot="top-right" slot-scope="props" v-if="dialogClasse == false">
+      <q-btn color="info" style="margin-right: 10px" @click.native="creerChapitre()">Creer un chapitre</q-btn>
+      <q-btn color="green" @click.native="creerChapitre()">Creer un devoir</q-btn>
+    </template>
+    <template slot="top-left" slot-scope="props">
+        Liste de chapitre de la classe
+      </template>
+    <template slot="body" slot-scope="props">
+      <q-tr :props="props">
+        <q-td key="numero">{{ props.row.numero }}</q-td>
+        <q-td key="titre">{{ props.row.titre }}</q-td>
+        <q-td key="dateDebut">{{ props.row.dateDebut }}</q-td>
+        <q-td key="dateDin">{{ props.row.dateFin }}</q-td>
+        <q-td key="actions">
+          <q-checkbox color="primary" v-model="props.expand" checked-icon="fas fa-caret-up" unchecked-icon="fas fa-caret-down" class="q-mr-md" />
+          <q-icon name="fas fa-edit" color="yellow" v-if="dialogClasse == false" style="margin-right: 10px"></q-icon>
+          <q-icon name="fas fa-trash-alt" v-if="dialogClasse == false" color="red"></q-icon>
+        </q-td>
+      </q-tr>
+      <q-tr v-show="props.expand" :props="props">
+        <q-td colspan="100%">
+          <div class="text-left">Liste des section du chapitre {{ props.row.titre }}</div>
+          <div class="text-right" v-if="dialogClasse == false">
+            <q-btn color="green" @click.native="creerSection(props.row.id)">Creer une section</q-btn>
+          </div>
+          <sections :sections.sync="props.row.sections" :dialogClasse="dialogClasse"></sections>
+          <!--<devoir :chapitreID.sync="props.row.id" :devoirs.sync="props.row.devoirs"></devoir>-->
+        </q-td>
+      </q-tr>
+    </template>
+  </q-table>
+  <div v-if="modalChapitre">
+    <chapitre :modalChapitre.sync="modalChapitre"></chapitre>
+  </div>
+  <div v-if="modalSection">
+    <section-chapitre :modalSection.sync="modalSection" :idChapitre.sync="idChapitre"></section-chapitre>
+  </div>
+</div>

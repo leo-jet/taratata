@@ -1,0 +1,33 @@
+<section>
+  <q-page>
+    <div style="padding: 10px" v-for="(classe, index) in mescours" :key="index">
+      <q-card>
+        <!--<q-card-media>
+                    <img src="assets/img/donuts.png">
+                </q-card-media>-->
+        <q-toolbar color="primary">
+          <q-toolbar-title>
+            {{classe.nom}}
+          </q-toolbar-title>
+        </q-toolbar>
+        <q-card-main>
+          <p>Cours de biologie au concours de médecine</p>
+        </q-card-main>
+        <q-card-separator />
+        <q-card-actions align="around">
+          <q-btn color="secondary" style="width:30%;" @click="showCours(classe.idClass)">Chapitres</q-btn>
+          <q-btn color="primary" style="width:30%;" @click="showQuiz(classe.idClass)">Quiz</q-btn>
+        </q-card-actions>
+      </q-card>
+    </div>
+    <div v-if="maximizedModal">
+      <cours :maximizedModal.sync="maximizedModal"></cours>
+    </div>
+    <div v-if="maximizedModalQuiz">
+      <liste-quiz :maximizedModalQuiz.sync="maximizedModalQuiz" :devoirs.sync="chapdevoirs"></liste-quiz>
+    </div>
+    <div v-if="maximizedModalChapitres">
+      <liste-chapitres :maximizedModalChapitres.sync="maximizedModalChapitres"></liste-chapitres>
+    </div>
+  </q-page>
+</section>

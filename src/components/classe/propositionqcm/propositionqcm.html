@@ -1,0 +1,18 @@
+<div>
+  <div class="row">
+    <div class="col-12">
+      <q-input v-model.lazy="enonce" float-label="Enoncé" type="textarea" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <q-checkbox v-model="solution" label="Solution" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <q-btn @click.native="creerProposition()">creer</q-btn>
+      <q-btn color="red" @click.native="fermer()">creer</q-btn>
+    </div>
+  </div>
+</div>

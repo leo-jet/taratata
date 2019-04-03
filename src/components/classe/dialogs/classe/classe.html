@@ -1,0 +1,38 @@
+<div>
+  <q-modal v-model="dialogClasse" maximized>
+    <q-toolbar color="primary">
+      <q-toolbar-title>
+        {{classe.nom}}
+      </q-toolbar-title>
+      <div v-if="$q.platform.is.desktop">
+        <q-btn color="green" @click.native="inscription()" style="margin-right: 10px">S'inscrirer</q-btn>
+        <q-btn color="red" @click.native="fermer()">fermer</q-btn>
+      </div>
+      <div v-else>
+        <q-btn-dropdown icon="menu" color="info">
+          <div class="column justify-center" style="margin-bottom: 10px; margin-top: 20px;">
+            <div class="col-2" style="padding: 5px; width: 100%">
+              <q-btn color="green" @click.native="inscription()" class="full-width">S'inscrirer</q-btn>
+            </div>
+            <div class="col-2" style="padding: 5px; width: 100%">
+              <q-btn color="red" @click.native="fermer()" class="full-width">fermer</q-btn>
+            </div>
+          </div>
+        </q-btn-dropdown>
+      </div>
+    </q-toolbar>
+    <q-tabs class="shadow-1" animated swipeable color="secondary" glossy align="justify">
+      <q-tab default name="information" slot="title" label="A propos" />
+      <q-tab name="chapitres" slot="title" label="Programme" />
+      <q-tab-pane name="information">
+        dssddsdsdsdsdds $x \neq 0$
+        <div ref="descriptionDialog" style="padding: 10px">
+          <span v-html="classe.description"></span>
+        </div>
+      </q-tab-pane>
+      <q-tab-pane name="chapitres">
+        <chapitres :dialogClasse="dialogClasse"></chapitres>
+      </q-tab-pane>
+    </q-tabs>
+  </q-modal>
+</div>

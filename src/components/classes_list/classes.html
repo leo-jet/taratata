@@ -1,0 +1,47 @@
+<section>
+  <q-table grid hide-header :data="classes" :pagination="pagination" hide-bottom :columns="columns" :filter="filter"
+    :visible-columns="visibleColumns" row-key="name">
+    <template slot="top-right" slot-scope="props">
+      <q-btn flat color="green" to="/classe/creer/">Creer</q-btn>
+    </template>
+    <div slot="item" slot-scope="props" class="col-xs-12 col-sm-6 col-md-4">
+      <q-card>
+        <q-card>
+          <q-card-media>
+
+          </q-card-media>
+          <q-card-title class="relative-position">
+            <div class="ellipsis">{{props.row.classe.nom}}</div>
+            <q-rating slot="subtitle" v-model="stars" :max="5" />
+            <div slot="right" class="row items-center text-weight-bold q-subheading">
+              {{props.row.classe.prix}} FCFA
+            </div>
+          </q-card-title>
+          <q-card-separator />
+          <q-card-main>
+            <p>{{props.row.classe.niveau}} | {{props.row.classe.matiere}}</p>
+            <read-more more-str="Afficher plus" :text="props.row.classe.description" less-str="Afficher moins"
+              :max-chars="250"></read-more>
+            <p style="padding-top: 10px">
+              <div class="q-subheading text-primary">Enseignants</div>
+              <q-tree :nodes="get_enseignant_classe(props.row)" node-key="label">
+                <div slot="default-header" slot-scope="prop" class="row items-center">
+                  <q-icon name="fas fa-chalkboard-teacher" class="q-mr-sm" />
+                  <div>{{ prop.node.label }}</div>
+                </div>
+              </q-tree>
+            </p>
+          </q-card-main>
+          <q-card-separator />
+          <q-card-actions>
+            <q-btn flat round icon="event" />
+            <q-btn flat color="primary">Voir</q-btn>
+            <q-btn flat color="warning" @click.native="modifier(props.row)">Modifier</q-btn>
+            <q-btn flat color="red">cloturer</q-btn>
+            <q-btn flat>Supprimer</q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-card>
+    </div>
+  </q-table>
+</section>

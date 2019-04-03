@@ -1,0 +1,32 @@
+<section>
+  <q-modal v-model="maximizedModalChapitre" maximized>
+    <q-layout view="lHh Lpr lFf">
+      <q-layout-header>
+        <q-toolbar :inverted="$q.theme === 'ios'" class="elevation-0">
+          <q-toolbar-title>
+            #1: {{section.intitule}}
+            <span slot="subtitle">
+              Chapitre : {{nomChapitre}}
+            </span>
+          </q-toolbar-title>
+          <q-btn round style="margin-left:10px;" @click="showSectionsListe()" color="green" icon="menu" />
+        </q-toolbar>
+      </q-layout-header>
+      <q-page-container>
+        <div v-if="sectionsListDrawer == false">
+          <contenu-section></contenu-section>
+        </div>
+      </q-page-container>
+      <q-layout-footer>
+        <q-toolbar color="primary">
+          <q-btn flat color="yellow" @click="" label="Precedent" />
+          <q-btn flat color="yellow" @click="" label="Suivant" />
+          <q-toolbar-title>
+          </q-toolbar-title>
+          <q-btn color="red" @click="close()" label="Fermer" />
+        </q-toolbar>
+      </q-layout-footer>
+    </q-layout>
+    <liste-sections :sectionsListDrawer.sync="sectionsListDrawer" :changeSectionContenu.sync="changeSectionContenu"></liste-sections>
+  </q-modal>
+</section>

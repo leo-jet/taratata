@@ -1,0 +1,42 @@
+<div class="row justify-center" style="padding-top:30px">
+  <div :class="{'col-12': $q.platform.is.mobile, 'col-6': $q.platform.is.desktop}">
+    <q-list>
+      <q-collapsible icon="" label="">
+        <template slot="header">
+          <q-item-side icon="fas fa-user" color="red" />
+          <q-item-main>
+            <q-item-tile label color="red">Information personnelle</q-item-tile>
+            <q-item-tile sublabel>Incomplet</q-item-tile>
+          </q-item-main>
+          <q-item-side right>
+            <q-icon name="star" color="red" size="24px" />
+          </q-item-side>
+        </template>
+        <div class="justify-center">
+          <information></information>
+        </div>
+      </q-collapsible>
+      <q-collapsible icon="fas fa-address-card" label="Contact">
+        <div class="justify-center">
+          <contact></contact>
+        </div>
+      </q-collapsible>
+      <q-collapsible icon="fas fa-graduation-cap" sublabel="Incomplet" label="Situation académique">
+        <div class="justify-center">
+          <academie></academie>
+        </div>
+      </q-collapsible>
+      <q-collapsible>
+        <template slot="header">
+          <q-item-side icon="phone" color="primary" />
+          <q-item-main label="using slot" />
+          <q-item-side right>
+            <q-icon name="star" color="red" size="24px" />
+          </q-item-side>
+        </template>
+
+        <div>dsfdfsdfdfsdf</div>
+      </q-collapsible>
+    </q-list>
+  </div>
+</div>

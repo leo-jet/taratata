@@ -1,0 +1,14 @@
+<section>
+  <q-table grid hide-header :data="classes" :pagination="pagination" hide-bottom :columns="columns" :filter="filter"
+    :visible-columns="visibleColumns" row-key="name">
+    <template slot="top-right" slot-scope="props">
+      <q-btn flat color="green" @click.sync="creerQuiz()">Creer un quiz</q-btn>
+    </template>
+    <div slot="item" slot-scope="props" class="col-xs-12 col-sm-6 col-md-4">
+      
+    </div>
+  </q-table>
+  <div v-if="modalQuiz">
+    <quiz :modalQuiz.sync="modalQuiz"></quiz>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+<section>
+  <div class="row justify-center">
+    <q-card style="width: 90%; margin: 30px;">
+      <q-card-title>
+        <q-btn color="warning" @click.native="modifier()" flat>Modifier</q-btn>
+        <q-btn color="green" flat>valider</q-btn>
+      </q-card-title>
+      <q-card-separator />
+      <q-card-main>
+        <div class="row">
+          <div class="col-4" style="padding-right: 10px">
+            <q-select :disable="!edit" v-model="sexe" float-label="Genre" :options="sexes" />
+          </div>
+          <div class="col-4" style="padding-right: 10px">
+            <q-input :disable="!edit" v-model="nom" float-label="Nom" rows="7" />
+          </div>
+          <div class="col-4">
+            <q-input :disable="!edit" v-model="prenom" float-label="Prénom" rows="7" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4" style="padding-right: 10px">
+            <q-input :disable="!edit" v-model="lieuNaissance" float-label="Lieu de naissance" rows="7" />
+          </div>
+          <div class="col-4" style="padding-right: 10px">
+                <q-input :disable="!edit" v-model="dateNaissance" float-label="Date de naissance" rows="7" />
+              </div>
+          <div class="col-4">
+            <q-input :disable="!edit" v-model="specialite" float-label="Specialité" rows="7" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4" style="padding-right: 10px">
+            <q-input :disable="!edit" v-model="quartier" float-label="Quartier de résidence" rows="7" />
+          </div>
+          <div class="col-4" style="padding-right: 10px">
+            <q-input :disable="!edit" v-model="ville" float-label="Ville de résidence" rows="7" />
+          </div>
+          <div class="col-4">
+            <q-input :disable="!edit" v-model="telephone" float-label="Numéro de téléphone" rows="7" />
+          </div>
+        </div>
+      </q-card-main>
+    </q-card>
+  </div>
+</section>

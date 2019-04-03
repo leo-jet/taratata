@@ -1,0 +1,17 @@
+<section>
+  <q-layout-drawer side="right" v-model="sectionsListDrawer" no-swipe-close behavior="mobile" :content-class="$q.theme === 'mat' ? 'bg-grey-3' : null">
+    <q-scroll-area class="fit">
+      <q-list highlight inset-separator>
+        <q-list-header>Sections</q-list-header>
+        <q-item v-for="(section, index) in sections" :key="index">
+          <q-item-main>
+            <div @click="chooseSection(index)">
+              #{{ index + 1}} {{section.intitule}}
+            </div>
+          </q-item-main>
+          <q-item-side v-if="indiceSectionCourante == index" right icon="thumb_up" />
+        </q-item>
+      </q-list>
+    </q-scroll-area>
+  </q-layout-drawer>
+</section>

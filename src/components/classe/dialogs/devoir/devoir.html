@@ -1,0 +1,51 @@
+<div>
+  <q-modal v-model="modalDevoir">
+    <q-toolbar color="primary">
+      <q-toolbar-title>
+        Créer un nouveau devoir
+        <div slot="subtitle">Formulaire de création d'un nouveau devoir pour le cours </div>
+      </q-toolbar-title>
+      <q-btn color="green" @click.native="creerDevoir()" style="margin-right: 10px">enregistrer</q-btn>
+      <q-btn color="red" @click.native="fermer()">fermer</q-btn>
+    </q-toolbar>
+    <div style="padding: 15px">
+      <div class="row">
+        <div class="col-12">
+          <q-select v-model="classe" float-label="Classe" :options="classes" @input="classeChange" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <q-select v-model="chapitre" float-label="Chapitre" :options="chapitres" @input="chapitreChange" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <q-input v-model.lazy="titre" float-label="Titre" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3" style="padding-right: 10px">
+          <q-datetime format-model="string" format="YYYY-MM-DD" v-model="dateDebut" type="date" default-view="year"
+            float-label="Date de debut" rows="7" />
+        </div>
+        <div class="col-3" style="padding-right: 10px">
+          <q-datetime format-model="string" format="YYYY-MM-DD" v-model="dateFin" type="date" default-view="year"
+            float-label="Date de fin" rows="7" />
+        </div>
+        <div class="col-1">
+          <q-input v-model.lazy="nombreEssai" float-label="Essai" type="number" />
+        </div> 
+        <div class="col-4">
+          <q-toggle v-model="correction" color="teal-8" label="Auto-correction" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <q-input v-model.lazy="consigne" float-label="Consigne" type="textarea" />
+        </div>
+      </div>
+    </div>
+
+  </q-modal>
+</div>

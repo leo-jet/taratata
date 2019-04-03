@@ -1,0 +1,11 @@
+<section>
+  <q-alert icon="fas fa-phone-square" color="primary" class="q-mb-sm">
+      Pour ajouter un nouvel enseignant veillez contacter le service à un de ces numéro 
+  </q-alert>
+  <q-table grid hide-header :data="enseignants"  :pagination="pagination" hide-bottom :columns="columns" hide-bottom
+    row-key="nom">
+    <div slot="item" slot-scope="props" class="col-xs-12 col-sm-6 col-md-4">
+      <enseignant :idEnseignant.sync="props.row.idEnseignant"></enseignant>
+    </div>
+  </q-table>
+</section>

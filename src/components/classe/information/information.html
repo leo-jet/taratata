@@ -1,0 +1,22 @@
+<div>
+  <div class="row">
+    <div class="col-6" style="padding-right: 10px">
+      <q-chips-input v-model="tags" float-label="Tags" @input="input_tags"></q-chips-input>
+    </div>
+    <div class="col-2" style="padding-right: 10px">
+      <q-datetime format-model="string" @blur="input_dateFinInscription(dateFinInscription)" format="YYYY-MM-DD hh:mm:ss" v-model="dateFinInscription"
+        type="date" default-view="year" float-label="Date de fin d'inscrription" rows="7" />
+    </div>
+    <div class="col-2" style="padding-right: 10px">
+      <q-select v-model="matiere" @input="input_matiere" float-label="Matière" :options="matieres" />
+    </div>
+    <div class="col-2">
+      <q-select v-model="niveau" @input="input_niveau" float-label="Niveau" :options="niveaux" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <q-input v-model.lazy="description" @blur="input_description(description)" float-label="Description" type="textarea" />
+    </div>
+  </div>
+</div>
