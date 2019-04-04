@@ -39,7 +39,7 @@
               </q-item-main>
             </q-item>
             <q-item-separator/>
-            <q-item v-close-overlay @click.native="deconnexion()">
+            <q-item v-close-overlay @click="deconnexion()">
               <q-item-side icon="fas fa-sign-out-alt" inverted color="red" />
               <q-item-main>
                 <q-item-tile label>Déconnexion</q-item-tile>
@@ -60,7 +60,7 @@
           <q-item-side icon="settings" />
           <q-item-main label="Cours"/>
         </q-item>
-        <q-item @click.native="deconnexion()">
+        <q-item @click="deconnexion()">
           <q-item-side icon="fas fa-sign-out-alt" />
           <q-item-main label="Déconnexion"/>
         </q-item>
