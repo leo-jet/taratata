@@ -29,7 +29,7 @@
         <q-btn-dropdown
           color="info"
           :label="nomPrenom"
-          v-if="$q.platform.is.desktop"
+          v-if="$q.platform.is.desktop && $store.state.utilisateur.connecte == true"
         >
           <q-list link>
             <q-item v-close-overlay to="profil/information">
@@ -75,14 +75,14 @@
 <script>
 import { openURL } from "quasar";
 export default {
-  preFetch({ store, redirect }) {
+  /*preFetch({ store, redirect }) {
     if (!store.state.utilisateur.connecte) {
       // IMPORTANT! Always use the String form of a
       // route if also building for SSR. The Object form
       // won't work on SSR builds.
       redirect("/profil/login");
     }
-  },
+  },*/
   name: "MyLayout",
   computed: {
     nomPrenom() {

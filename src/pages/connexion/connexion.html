@@ -9,18 +9,16 @@
         <div class="justify-center">
           <div class="column">
             <div class="col-6">
-              <q-input v-model="username" prefix="Identifiant:" rows="7" />
+              <q-input v-model="username" float-label="Identifiant:" rows="7" />
             </div>
             <div class="col-6">
-              <q-input v-model="password" type="password" prefix="Mot de pass:" rows="7" />
+              <q-input v-model="password" type="password" float-label="Mot de pass:" rows="7" />
             </div>
           </div>
           <div class="row" style="padding:10px">
-            <div class="col-6">
-              <q-btn color="green" label="Se connecter" @click.native="seConnecter()"></q-btn>
-            </div>
-            <div class="col-6">
-              <q-btn color="red" label="Annuler" @click.native="seConnecter()"></q-btn>
+            <div class="col-12">
+              <q-btn color="green" class="q-ml-sm" label="Se connecter" @click.native="seConnecter()"></q-btn>
+              <q-btn color="red" flat class="q-ml-sm" label="Annuler" @click.native="seConnecter()"></q-btn>
             </div>
           </div>
           <div class="row">

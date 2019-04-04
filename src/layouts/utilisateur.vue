@@ -30,7 +30,7 @@
           dense
           icon="menu"
         />
-        <q-btn color="info" to="profil/information" style="margin-right:10px" v-if="$q.platform.is.desktop">ACCUEIL</q-btn>
+        <q-btn color="info" to="/" style="margin-right:10px" v-if="$q.platform.is.desktop">ACCUEIL</q-btn>
         <q-btn color="yellow" to="/profil/confirmation" style="margin-right:10px" v-if="$q.platform.is.desktop">Valider son compte</q-btn>
         <q-btn-dropdown
           color="info"
