@@ -1,76 +1,24 @@
-import axios from 'axios';
-export const enregistrement = ({
+import {
+  fb,
+  utilisateursCollection
+} from 'assets/javascript/firebase.js'
+
+export const get_user = async ({
   commit
 }, data) => {
-  axios.defaults.headers.common['Authorization'] = "JWT " + data.token
-  let url = (data.self.$q.platform.is.mobile && process.env.DEV) ? "http://10.0.2.2:8000/connexion/enregistrement/" : process.env.API + "/connexion/enregistrement/"
-  return new Promise((resolve, reject) => {
-    try {
-      axios.post(url, data.formData).then((response) => {
-          resolve({
-            status: true,
-            data: response.data
-          })
-        })
-        .catch((error) => {
-          reject({
-            status: false,
-            data: error.response
-          })
-        })
-    } catch (e) {
-      console.log(e);
+  try {
+    var usersDoc = await utilisateursCollection.doc(data.email).get()
+    var userData = usersDoc.data()
+    var classesQuery = await usersDoc.ref.collection("classes").get()
+    userData.classes = []
+    if (classesQuery.empty == false) {
+      for (var classeDoc of classesQuery.docs) {
+        userData.classes.push(classeDoc.id)
+      }
     }
-  });
-}
-
-
-export const confirmation = ({
-  commit
-}, data) => {
-  axios.defaults.headers.common['Authorization'] = "JWT " + data.token
-  let url = (data.self.$q.platform.is.mobile && process.env.DEV) ? "http://10.0.2.2:8000/connexion/confirmation/" : process.env.API + "/connexion/confirmation/"
-  return new Promise((resolve, reject) => {
-    try {
-      axios.post(url, data.formData).then((response) => {
-          resolve({
-            status: true,
-            data: response.data
-          })
-        })
-        .catch((error) => {
-          reject({
-            status: false,
-            data: error.response
-          })
-        })
-    } catch (e) {
-      console.log(e);
-    }
-  });
-}
-
-export const editer_information = ({
-  commit
-}, data) => {
-  axios.defaults.headers.common['Authorization'] = "JWT " + data.token
-  let url = (data.self.$q.platform.is.mobile && process.env.DEV) ? "http://10.0.2.2:8000/eleve/" + data.id + "/" : process.env.API + "/eleve/" + data.id + "/"
-  return new Promise((resolve, reject) => {
-    try {
-      axios.put(url, data.formData).then((response) => {
-          resolve({
-            status: true,
-            data: response.data
-          })
-        })
-        .catch((error) => {
-          reject({
-            status: false,
-            data: error.response
-          })
-        })
-    } catch (e) {
-      console.log(e);
-    }
-  });
+    userData.connecte = true
+    commit("SET_UTILISATEUR", userData)
+  } catch (e) {
+    console.log(e);
+  }
 }

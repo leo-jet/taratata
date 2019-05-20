@@ -46,6 +46,10 @@ export function ADD_PROPOSITION(state, proposition) {
   state.propositions.push(proposition)
 }
 
+export function DELETE_PROPOSITION(state, index) {
+  state.propositions.splice(index, 1)
+}
+
 export function INIT_QUESTION(state) {
   state.question = null
 }

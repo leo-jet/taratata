@@ -1,5 +1,9 @@
 import axios from 'axios';
 import quiz from "components/classe/dialogs/quiz/quiz.vue";
+import {
+  fb,
+  classesCollection
+} from 'assets/javascript/firebase.js'
 export default {
   components: {
     quiz
@@ -7,7 +11,7 @@ export default {
   computed: {},
   data() {
     return {
-      modalQuiz: true, 
+      modalQuiz: true,
       rows_per_page_options: [0, 0],
       filter: "",
       columns: [{
@@ -80,21 +84,55 @@ export default {
       dark: true,
       selectedSecond: [{
         name: 'Eclair'
-      }]
+      }],
+      devoirs: []
     }
   },
   computed: {
-    classes() {
-      return this.$store.state.classe.classes
-    }
   },
   methods: {
-    creerQuiz(){
+    creerQuiz() {
       this.modalQuiz = true
     },
   },
-  mounted() {
-    
+  async mounted() {
+    console.log("Quiz mounting")
+    var idClasse = this.$store.state.classe.classe.id
+    console.log(idClasse, "aaaaaaaaaaaaaaaaaaaaaaa")
+    var chapitresQuery = await classesCollection.doc(idClasse).collection("chapitres").get()
+    console.log(chapitresQuery, "bbbbbbbbbbbbbbbbbbbbbbb")
+    var chapitres = []
+    for (var chapitreDoc of chapitresQuery.docs) {
+      if (chapitreDoc.exists) {
+        var chapitre = chapitreDoc.data()
+        chapitre.id = chapitreDoc.id
+        var sectionsQuery = await chapitreDoc.ref.collection("sections").get()
+        var sections = []
+        console.log(chapitreDoc, "ccccccccccccccccccccccccccc")
+        for (var sectionDoc of sectionsQuery.docs) {
+          if (sectionDoc.exists) {
+            var section = sectionDoc.data()
+            section.id = sectionDoc.id
+            var devoirsQuery = await sectionDoc.ref.collection("devoirs").get()
+            var devoirs = []
+            console.log(devoirsQuery, "ddddddddddddddddddddddddddddd")
+            for (var devoirDoc of devoirsQuery.docs) {
+              if (devoirDoc.exists) {
+                var devoir = devoirDoc.data()
+                devoir.id = devoirDoc.id
+                devoirs.push(devoir)
+                console.log(devoirDoc, "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+              }
+            }
+            section.devoirs = devoirs
+            sections.push(section)
+          }
+        }
+        chapitre.sections = sections
+        chapitres.push(chapitre)
+      }
+    }
+    this.devoirs = chapitres
   },
   destroyed() {
     console.log("good bye")

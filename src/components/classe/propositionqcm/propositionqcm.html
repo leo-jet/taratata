@@ -1,18 +1,56 @@
 <div>
-  <div class="row">
-    <div class="col-12">
-      <q-input v-model.lazy="enonce" float-label="Enoncé" type="textarea" />
+  <div class="q-ml-sm" v-if="newProposition == false">
+    <q-btn class="q-ml-sm" color="green" @click.native="newProposition = true">Nouvelle
+      proposition</q-btn>
+  </div>
+  <div class="q-ml-sm" v-if="newProposition == true">
+    <div class="row">
+      <div class="col-12 q-ml-sm">
+        <q-btn class="q-ml-sm" color="green" @click.native="creerProposition()">creer la proposition</q-btn>
+        <q-btn class="q-ml-sm" flat color="red" @click.native="newProposition = false">Annuler</q-btn>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 q-ml-sm">
+        <quill-editor v-model="enonce" ref="myQuillEditor" :options="editorOption">
+        </quill-editor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 q-ml-sm">
+        <q-checkbox v-model="solution" label="Solution" />
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-12">
-      <q-checkbox v-model="solution" label="Solution" />
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <q-btn @click.native="creerProposition()">creer</q-btn>
-      <q-btn color="red" @click.native="fermer()">creer</q-btn>
+  <div v-if="newProposition == false">
+    <div v-for="(proposition, index) in propositions" :key="index" style="padding: 10px">
+      <q-list>
+        <q-item>
+          <q-item-side>
+            <q-item-tile>
+                <q-btn
+                round
+                dense
+                color="red"
+                size="sm"
+                icon="fas fa-trash"
+                @click.native="deleteProposition(index)"
+              />
+            </q-item-tile>
+          </q-item-side>
+          <q-item-main>
+            <q-item-tile label>
+              <quill-editor disabled v-model="proposition.enonce" :options="editorOptionHideToolbar">
+              </quill-editor>
+            </q-item-tile>
+          </q-item-main>
+          <q-item-side right v-if="proposition.solution == true">
+            <q-item-tile>
+              <q-icon color="green" name="fas fa-check-circle" />
+            </q-item-tile>
+          </q-item-side>
+        </q-item>
+      </q-list>
     </div>
   </div>
 </div>

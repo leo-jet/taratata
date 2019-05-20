@@ -1,18 +1,45 @@
 <div>
-  <div class="row">
-    <div class="col-12">
-      <q-input v-model.lazy="numero" float-label="Numero" type="number" />
+  <div class="q-ml-sm" v-if="newProposition == false">
+    <q-btn class="q-ml-sm" color="green" @click.native="newProposition = true">Nouvelle
+      proposition</q-btn>
+  </div>
+  <div v-if="newProposition == true">
+    <div class="row">
+      <div class="col-12">
+        <q-btn class="q-ml-sm" color="green" @click.native="creerProposition()">creer la proposition</q-btn>
+        <q-btn class="q-ml-sm" flat color="red" @click.native="fermer()">fermer</q-btn>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1" style="padding:10px">
+        <q-input v-model.lazy="numero" float-label="Numero" type="number" />
+      </div>
+      <div class="col-11" style="padding:10px">
+        <q-input v-model.lazy="annotation" float-label="Annotation" type="textarea" />
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-12">
-      <q-input v-model.lazy="annotation" float-label="Annotation" type="textarea" />
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <q-btn @click.native="creerProposition()">creer</q-btn>
-      <q-btn color="red" @click.native="fermer()">creer</q-btn>
+  <div v-if="newProposition == false">
+    <div v-for="(proposition, index) in propositions" :key="index" style="padding: 10px">
+      <q-list>
+        <q-item>
+          <q-item-side>
+            <q-item-tile>
+              <q-btn round dense color="red" size="sm" icon="fas fa-trash" @click.native="deleteProposition(index)" />
+            </q-item-tile>
+          </q-item-side>
+          <q-item-side>
+            <q-item-tile>
+              {{proposition.numero}}
+            </q-item-tile>
+          </q-item-side>
+          <q-item-main>
+            <q-item-tile label>
+              {{proposition.reponse}}
+            </q-item-tile>
+          </q-item-main>
+        </q-item>
+      </q-list>
     </div>
   </div>
 </div>

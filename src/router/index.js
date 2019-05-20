@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+import {
+  fb
+} from 'assets/javascript/firebase.js'
 import routes from './routes'
 
 Vue.use(VueRouter)
@@ -10,9 +12,11 @@ Vue.use(VueRouter)
  * directly export the Router instantiation
  */
 
-export default function (/* { store, ssrContext } */) {
+export default function ( /* { store, ssrContext } */ ) {
   const Router = new VueRouter({
-    scrollBehavior: () => ({ y: 0 }),
+    scrollBehavior: () => ({
+      y: 0
+    }),
     routes,
 
     // Leave these as is and change from quasar.conf.js instead!

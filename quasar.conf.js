@@ -25,12 +25,32 @@ module.exports = function (ctx) {
       env: ctx.dev ? { // so on dev we'll have
         API: JSON.stringify('http://127.0.0.1:8000'),
       } : { // and on build (production):
-        API: JSON.stringify('https://homeschoolcameroun.pythonanywhere.com/'),
+        API: JSON.stringify('https://homeschoolcameroun.pythonanywhere.com'),
       },
       // vueCompiler: true,
       // gzip: true,
       // analyze: true,
       // extractCSS: false,
+      sourceMap: false,
+      minify: true,
+      uglifyOptions:{
+        warnings:true,
+        output: {
+          comments: false, // remove comments
+        },
+        compress: {
+          unused: true,
+          dead_code: true, // big one--strip code that will never execute
+          warnings: false, // good for prod apps so users can't peek behind curtain
+          drop_debugger: true,
+          conditionals: true,
+          evaluate: true,
+          drop_console: true, // strips console statements
+          sequences: true,
+          booleans: true,
+        },
+        sourceMap: false,
+      },
       extendWebpack(cfg) {}
     },
     devServer: {
@@ -96,7 +116,9 @@ module.exports = function (ctx) {
         'QTr',
         'QTd',
         'QField',
-        'QTableColumns'
+        'QTableColumns',
+        'QTimeline',
+        'QTimelineEntry'
       ],
       directives: [
         'Ripple',
@@ -121,7 +143,7 @@ module.exports = function (ctx) {
       // workboxPluginMode: 'InjectManifest',
       // workboxOptions: {},
       manifest: {
-        // name: 'Quasar App',
+        name: 'Homeschool',
         // short_name: 'Quasar-PWA',
         // description: 'Best PWA App in town!',
         display: 'standalone',

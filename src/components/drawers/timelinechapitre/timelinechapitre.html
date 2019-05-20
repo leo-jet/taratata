@@ -1,0 +1,12 @@
+<section>
+  <q-layout-drawer side="right" v-model="right" :overlay="rightOverlay" :behavior="rightBehavior"
+    :breakpoint="rightBreakpoint" :content-class="$q.theme === 'mat' ? 'bg-grey-3' : null">
+    <q-list-header>Right Panel</q-list-header>
+    <q-timeline color="secondary" style="padding: 0 24px;">
+      <div v-for="(section, index) in sections" :key="section.id">
+        <q-timeline-entry :title="section.titre" style="cursor:pointer" subtitle="February 22, 1986" icon="fas fa-book-open" @click.native="seeSection(section)"></q-timeline-entry>
+        <q-timeline-entry v-for="devoir in section.devoirs" subtitle="February 22, 1986" :key="devoir.id" :title="devoir.titre" @click.native="faireDevoir(section.id, devoir.id)" icon="fas fa-question-circle"></q-timeline-entry>
+      </div>
+    </q-timeline>
+  </q-layout-drawer>
+</section>

@@ -55,6 +55,20 @@ export default {
 
   },
   mounted() {
-
+    var self = this
+    this.classeRef.collection('chapitres').orderBy('numero')
+      .get().then(function (querySnapshot) {
+        if (querySnapshot.empty == false) {
+          var chapitres = querySnapshot.docs.map(function (documentSnapshot) {
+            return documentSnapshot.data();
+          })
+          self.chapitres = chapitres
+          console.log(self.chapitres)
+        } else {
+          self.chapitres = []
+        }
+      }).catch(function (error) {
+        console.log("Error getting document:", error);
+      });
   }
 }

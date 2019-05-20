@@ -1,0 +1,35 @@
+<section>
+  <q-layout :view="view">
+    <q-layout-header v-model="header" :reveal="headerReveal">
+      <q-toolbar :inverted="$q.theme === 'ios'">
+        <q-toolbar-title>
+          Chapitre {{chapitre.numero}}: {{chapitre.titre}}
+          <span slot="subtitle">{{classe.nom}}</span>
+        </q-toolbar-title>
+        <q-btn flat round dense icon="fas fa-chevron-left" @click="right = !right"
+          aria-label="Toggle menu on right side" />
+        <q-btn flat round dense icon="fas fa-chevron-right" @click="right = !right"
+          aria-label="Toggle menu on right side" />
+        <q-btn flat round dense icon="fas fa-list-alt" @click="right = !right" aria-label="Toggle menu on right side" />
+        <q-btn flat round dense icon="fas fa-comments" @click="discussionDrawer = !discussionDrawer"
+          aria-label="Toggle menu on right side" />
+        <q-btn flat round dense icon="fas fa-times-circle" @click="sortir()" aria-label="Toggle menu on right side" />
+      </q-toolbar>
+    </q-layout-header>
+
+    <q-layout-footer v-model="footer" :reveal="footerReveal">
+      <q-toolbar :inverted="$q.theme === 'ios'">
+        <q-toolbar-title>
+          Footer
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-layout-footer>
+    <timelinechapitre></timelinechapitre>
+    <discussion :discussionDrawer.sync="discussionDrawer"></discussion>
+    <q-page-container>
+      <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" mode="out-in">
+        <router-view />
+      </transition>
+    </q-page-container>
+  </q-layout>
+</section>

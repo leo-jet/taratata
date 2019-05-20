@@ -1,6 +1,10 @@
 import axios from 'axios';
+import {
+  classesCollection,
+  sectionsCollection
+} from 'assets/javascript/firebase.js'
 export default {
-  props: ["modalSection", "idChapitre"],
+  props: ["modalSection", "chapnumero"],
   components: {},
   name: 'classe_dialog_section',
   data() {
@@ -15,8 +19,8 @@ export default {
         theme: 'snow',
         placeholder: 'Your questing here... $s^r$',
         modules: {
-          'formula': true,
           'toolbar': [
+            ['link', 'image', 'video', 'formula'],
             ['bold', 'italic', 'underline', 'strike'], // toggled buttons
             ['blockquote', 'code-block'],
 
@@ -71,23 +75,32 @@ export default {
   computed: {
     editor() {
       return this.$refs.myQuillEditor.quill
+    },
+    classeRef() {
+      return classesCollection.doc(this.$route.params.idClasse)
     }
   },
   methods: {
     fermer() {
       this.$emit("update:modalSection", false)
     },
-    renderContent () {
+    renderContent() {
       this.$refs.myContent.textContent = this.content
     },
 
-    renderMathJax () {
+    renderMathJax() {
       this.renderContent()
       if (window.MathJax) {
         window.MathJax.Hub.Config({
           tex2jax: {
-            inlineMath: [['$', '$'], ['(', ')']],
-            displayMath: [['$$', '$$'], ['[', ']']],
+            inlineMath: [
+              ['$', '$'],
+              ['(', ')']
+            ],
+            displayMath: [
+              ['$$', '$$'],
+              ['[', ']']
+            ],
             processEscapes: true,
             processEnvironments: true
           },
@@ -95,11 +108,17 @@ export default {
           // we use CSS to left justify single line equations in code cells.
           displayAlign: 'center',
           'HTML-CSS': {
-            styles: { '.MathJax_Display': { margin: 0 } },
-            linebreaks: { automatic: true }
+            styles: {
+              '.MathJax_Display': {
+                margin: 0
+              }
+            },
+            linebreaks: {
+              automatic: true
+            }
           }
         })
-        
+
         window.MathJax.Hub.Queue([
           'Typeset',
           window.MathJax.Hub,
@@ -125,51 +144,30 @@ export default {
       this.content = html
       this.renderMathJax()
     },
-    enregistrer() {
-      axios.defaults.headers.common['Access-Control-Allow-Origin'] = "*"
-      axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true
-      axios.defaults.headers.common['Authorization'] = "JWT " + this.$store.state.utilisateur.token
-      axios.defaults.headers.common['Content-Type'] = 'multipart/form-data'
-      console.log("token", this.$store.state.utilisateur.token)
-      let url = process.env.API + "/section/"
-      let data = new FormData()
-      data.append("intitule", this.intitule)
-      data.append("numero", this.numero)
-      data.append("idChapitre", this.idChapitre)
-      data.append("contenu", this.content)
-      if(this.$refs.fichier.files[0]){
-        data.append("contenuFichier", this.$refs.fichier.files[0])
+    async enregistrer() {
+      var chap = {
+        titre: this.intitule,
+        numero: this.numero,
+        contenu: this.content
       }
-      if(this.$refs.video.files[0]){
-        data.append("contenuVideo", this.$refs.video.files[0])
-      }
-      axios.post(url, data).then((response) => {
-          let message = "La section a été bien créée"
-          this.fermer()
-          this.$q.notify({
-            type: "positive",
-            message: message,
-          })
-        })
-        .catch((error) => {
-          let message = "Identifiant ou mot de pass incorrect!" + error
-          this.$q.notify({
-            type: "positive",
-            message: message,
-          })
-        })
+      var num = this.chapnumero
+      var sectionRef = await this.classeRef.collection('chapitres').doc(num.toString()).collection('sections').add(chap)
+      sectionsCollection.doc(sectionRef.id).set(chap)
+      this.fermer()
     }
   },
   mounted() {
-    axios.defaults.headers.common['Access-Control-Allow-Origin'] = "*"
-    axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true
-    axios.defaults.headers.common['Authorization'] = "JWT " + this.$store.state.utilisateur.token
-    axios.defaults.headers.common['Content-Type'] = 'multipart/form-data'
     if (window.MathJax) {
       window.MathJax.Hub.Config({
         tex2jax: {
-          inlineMath: [['$', '$'], ['(', ')']],
-          displayMath: [['$$', '$$'], ['[', ']']],
+          inlineMath: [
+            ['$', '$'],
+            ['(', ')']
+          ],
+          displayMath: [
+            ['$$', '$$'],
+            ['[', ']']
+          ],
           processEscapes: true,
           processEnvironments: true
         },
@@ -177,11 +175,17 @@ export default {
         // we use CSS to left justify single line equations in code cells.
         displayAlign: 'center',
         'HTML-CSS': {
-          styles: { '.MathJax_Display': { margin: 0 } },
-          linebreaks: { automatic: true }
+          styles: {
+            '.MathJax_Display': {
+              margin: 0
+            }
+          },
+          linebreaks: {
+            automatic: true
+          }
         }
       })
-      
+
       window.MathJax.Hub.Queue([
         'Typeset',
         window.MathJax.Hub,
@@ -190,16 +194,9 @@ export default {
     }
   },
   destroyed() {
-    let url = process.env.API + "/classe/" + this.$route.params.idClasse + "/"
-    axios.get(url).then((response) => {
-        this.$store.commit("classe/init_classe", response.data)
-      })
-      .catch((error) => {
-        let message = "Identifiant ou mot de pass incorrect!" + error
-        this.$q.notify({
-          type: "positive",
-          message: message,
-        })
-      })
+    let data = {
+      "classeRef": this.classeRef
+    }
+    this.$store.dispatch('classe/get_chapitres_with_sections', data)
   }
 }

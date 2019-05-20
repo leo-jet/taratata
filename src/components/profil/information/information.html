@@ -14,11 +14,14 @@
       <q-input v-model="prenom" :disable="!edition" float-label="Prénom:" rows="7" />
     </div>
     <div class="col-6">
-      <q-datetime format-model="string" :disable="!edition" format="YYYY-MM-DD" v-model="dateNaissance" type="date" default-view="year"
-        float-label="Date de naissance" rows="7" />
+      <q-datetime format-model="string" :disable="!edition" format="YYYY-MM-DD" v-model="dateNaissance" type="date"
+        default-view="year" float-label="Date de naissance" rows="7" />
     </div>
     <div class="col-6">
-      <q-input v-model="code" :disable="!edition" float-label="Lieu de naissance:" rows="7" />
+      <q-input v-model="lieuNaissance" :disable="!edition" float-label="Lieu de naissance:" rows="7" />
+    </div>
+    <div class="col-6">
+      <q-input v-model="email" disable float-label="Email:" rows="7" />
     </div>
     <div class="col-6">
       <q-input v-model="numero" :disable="!edition" float-label="Numero:" rows="7" />

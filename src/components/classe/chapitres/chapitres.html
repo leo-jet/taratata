@@ -1,6 +1,6 @@
 <div>
-  <q-table grid :data="chapitres" :pagination="pagination" hide-bottom :columns="columns" :filter="filter" row-key="titre">
-    <template slot="top-right" slot-scope="props" v-if="dialogClasse == false">
+  <!--<q-table grid :data="chapitres" :pagination="pagination" hide-bottom :columns="columns" :filter="filter" row-key="titre">
+    <template slot="top-right" slot-scope="props">
       <q-btn color="info" style="margin-right: 10px" @click.native="creerChapitre()">Creer un chapitre</q-btn>
       <q-btn color="green" @click.native="creerChapitre()">Creer un devoir</q-btn>
     </template>
@@ -22,19 +22,99 @@
       <q-tr v-show="props.expand" :props="props">
         <q-td colspan="100%">
           <div class="text-left">Liste des section du chapitre {{ props.row.titre }}</div>
-          <div class="text-right" v-if="dialogClasse == false">
-            <q-btn color="green" @click.native="creerSection(props.row.id)">Creer une section</q-btn>
+          <div class="text-right">
+            <q-btn color="green" @click.native="creerSection(props.row.numero)">Creer une section</q-btn>
           </div>
           <sections :sections.sync="props.row.sections" :dialogClasse="dialogClasse"></sections>
-          <!--<devoir :chapitreID.sync="props.row.id" :devoirs.sync="props.row.devoirs"></devoir>-->
+          <devoir :chapitreID.sync="props.row.id" :devoirs.sync="props.row.devoirs"></devoir>
         </q-td>
       </q-tr>
     </template>
-  </q-table>
+  </q-table>-->
+  <div class="row">
+    <div class="col-6 q-pa-sm">
+      <q-btn color="info" style="margin-right: 10px" @click.native="creerChapitre()">Creer un chapitre</q-btn>
+    </div>
+  </div>
+  <div class="row">
+    <div v-for="(chapitre, index) in chapitres" :key="index" class="col-6 q-pa-sm">
+      <q-list highlight>
+        <q-item multiline>
+          <q-item-side>
+            <q-item-tile>
+              {{chapitre.numero}}
+            </q-item-tile>
+          </q-item-side>
+          <q-item-main>
+            <q-item-tile label>{{chapitre.titre}}</q-item-tile>
+            <q-item-tile sublabel>
+              {{chapitre.dateDebut}} | {{chapitre.dateFin}}
+            </q-item-tile>
+          </q-item-main>
+          <q-item-side right>
+            <q-item-tile>
+                <q-btn
+                round
+                dense
+                color="yellow"
+                size="sm"
+                icon="fas fa-pen"
+                @click.native=""
+              />
+            </q-item-tile>
+          </q-item-side>
+        </q-item>
+        <q-item multiline>
+          <q-item-side>
+            <q-item-tile>
+              
+            </q-item-tile>
+          </q-item-side>
+          <q-item-main>
+            <q-item-tile label>Section</q-item-tile>
+          </q-item-main>
+          <q-item-side right>
+            <q-item-tile>
+                <q-btn
+                round
+                dense
+                color="green"
+                size="sm"
+                icon="fas fa-plus-circle"
+                @click.native="creerSection(chapitre.numero)"
+              />
+            </q-item-tile>
+          </q-item-side>
+        </q-item>
+        <q-item v-for="(section, indexSection) in chapitre.sections" :key="indexSection">
+          <q-item-side>
+            <q-item-tile>
+              {{section.numero}}
+            </q-item-tile>
+          </q-item-side>
+          <q-item-main>
+            <q-item-tile label>{{section.titre}}</q-item-tile>
+          </q-item-main>
+          <q-item-side right>
+            <q-item-tile>
+                <q-btn
+                round
+                dense
+                color="yellow"
+                size="sm"
+                icon="fas fa-pen"
+                @click.native=""
+              />
+            </q-item-tile>
+          </q-item-side>
+        </q-item>
+      </q-list>
+    </div>
+  </div>
   <div v-if="modalChapitre">
     <chapitre :modalChapitre.sync="modalChapitre"></chapitre>
   </div>
   <div v-if="modalSection">
-    <section-chapitre :modalSection.sync="modalSection" :idChapitre.sync="idChapitre"></section-chapitre>
+    <section-chapitre :modalSection.sync="modalSection" :chapnumero.sync="idChapitre"></section-chapitre>
   </div>
 </div>

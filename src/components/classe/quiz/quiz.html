@@ -1,11 +1,34 @@
 <section>
-  <q-table grid hide-header :data="classes" :pagination="pagination" hide-bottom :columns="columns" :filter="filter"
+  <q-table grid hide-header :data="devoirs" :pagination="pagination" hide-bottom :columns="columns" :filter="filter"
     :visible-columns="visibleColumns" row-key="name">
     <template slot="top-right" slot-scope="props">
       <q-btn flat color="green" @click.sync="creerQuiz()">Creer un quiz</q-btn>
     </template>
-    <div slot="item" slot-scope="props" class="col-xs-12 col-sm-6 col-md-4">
-      
+    <div slot="item" slot-scope="props" class="col-xs-12 col-sm-6 col-md-4 q-pa-xs">
+      <q-toolbar color="primary">
+        <q-toolbar-title>
+          Chapitre {{props.row.titre}}
+        </q-toolbar-title>
+      </q-toolbar>
+      <q-list highlight v-for="(section,index) in props.row.sections" :key="section.id">
+        <q-list-header>{{index+1}}. {{section.titre}}</q-list-header>
+        <q-item v-for="(devoir, indexdevoir) in section.devoirs" :key="devoir.id">
+          <q-item-side>
+            <q-item-tile stamp>{{indexdevoir + 1}}</q-item-tile>
+            <q-item-tile icon="star" color="yellow" />
+          </q-item-side>
+          <q-item-main>
+            <q-item-tile> {{devoir.titre}} </q-item-tile>
+            <q-item-tile>
+              Début: {{devoir.dateDebut}} | Fin: {{devoir.dateFin}} 
+            </q-item-tile>
+            <q-item-tile>
+              Nombre d'essai: {{devoir.nombreEssai}} | Correction: {{devoir.correction}}
+            </q-item-tile>
+          </q-item-main>
+        </q-item>
+        <q-item-separator />
+      </q-list>
     </div>
   </q-table>
   <div v-if="modalQuiz">

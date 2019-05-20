@@ -9,23 +9,29 @@ export default {
   data() {
     return {
       numero: "",
-      annotation: "" 
+      annotation: "",
+      newProposition: false
+    }
+  },
+  computed: {
+    propositions() {
+      return this.$store.state.question.propositions
     }
   },
   methods: {
     fermer() {
-      this.$emit("update:addQuestion", false)
+      this.newProposition = false
+    },
+    deleteProposition(index){
+      this.$store.commit('question/DELETE_PROPOSITION', index)
     },
     creerProposition() {
       let data = {
         "numero": this.numero,
         "reponse": this.annotation,
-        "idQuestion": this.$store.state.question.question.idQuestion,
-        "url": process.env.API + "/propositionschema/",
-        "token": this.$store.state.utilisateur.token
       }
-      this.$store.dispatch('question/creer_proposition', data)
-      this.$emit("update:addQuestion", false)
+      this.$store.commit('question/ADD_PROPOSITION', data)
+      this.newProposition = false
     }
   },
   mounted() {

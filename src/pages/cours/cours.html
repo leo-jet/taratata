@@ -7,11 +7,10 @@
   <div v-if="$q.platform.is.mobile">
     <div style="padding: 10px" v-for="(chapitre, index) in chapitres" :key="index">
       <q-card>
-        <q-toolbar color="primary">
-          <q-toolbar-title>
-            {{chapitre.label}}
-          </q-toolbar-title>
-        </q-toolbar>
+        <q-card-title>
+          {{chapitre.label}}
+          <span slot="subtitle">Subtitle</span>
+        </q-card-title>
         <q-card-main>
           <p>Nombre de sections: {{chapitre.data.sections.length}}</p>
           <p>Nombre de quiz: {{chapitre.data.devoirs.length}} </p>
@@ -32,11 +31,10 @@
           <!--<q-card-media>
                                       <img src="assets/img/donuts.png">
                                   </q-card-media>-->
-          <q-toolbar color="primary">
-            <q-toolbar-title>
-              {{chapitre.label}}
-            </q-toolbar-title>
-          </q-toolbar>
+          <q-card-title>
+            {{chapitre.label}}
+            <span slot="subtitle">Chapitre {{index+1}} </span>
+          </q-card-title>
           <q-card-main>
             <p>Nombre de sections: {{chapitre.data.sections.length}}</p>
             <p>Nombre de quiz: {{chapitre.data.devoirs.length}} </p>

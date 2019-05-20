@@ -1,4 +1,4 @@
-<div style="padding: 10px">
+<div class="q-pa-sm">
   <q-card>
     <q-card>
       <q-toolbar dark color="primary">
@@ -14,13 +14,12 @@
       <q-card-main>
         <div>
           Enoncé
-          <p>{{question.enonce}}</p>
+          <div v-html="question.enonce"></div>
         </div>
         <div v-if="question.type=='qcm'">
           Propositions
-          <p v-for="(proposition, index) in question.propositions" :key="index">
-            {{proposition.enonce}}
-          </p>
+          <div v-for="(proposition, index) in question.propositions" :key="index" v-html="proposition.enonce">
+          </div>
         </div>
         <div v-if="question.type=='schema'">
           Propositions

@@ -23,7 +23,7 @@
           <q-tree :nodes="classes" color="secondary" default-expand-all :ticked.sync="ticked" :tick-strategy="tickStrategy"
             :filter="tickFilter" node-key="id" />
         </div>
-        <div class="col-8" style="padding-right: 10px">
+        <div class="col-8 pa-0">
           <q-table grid hide-header :data="questions" :pagination="pagination" hide-bottom :columns="columns" :filter="filter"
             :visible-columns="visibleColumns" row-key="name">
             <template slot="top-right" slot-scope="props">

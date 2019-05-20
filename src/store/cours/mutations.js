@@ -10,8 +10,16 @@ export const SET_CHAPITRES = (state, chapitres) => {
     state.chapitres = chapitres
 }
 
+export const SET_CHAPITRE = (state, chapitre) => {
+    state.chapitre = chapitre
+}
+
 export const SET_SECTIONS = (state, sections) => {
     state.sections = sections
+}
+
+export const SET_SECTION = (state, section) => {
+    state.section = section
 }
 
 export const SET_INDICE_SECTION_COURANTE = (state, indice) => {

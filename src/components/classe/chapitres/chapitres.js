@@ -1,11 +1,13 @@
-import axios from 'axios';
+import {
+  classesCollection
+} from 'assets/javascript/firebase.js'
 import chapitre from "components/classe/dialogs/chapitre/chapitre.vue";
 import sectionChapitre from "components/classe/dialogs/section/section.vue";
 import devoir from "components/classe/devoir/devoir.vue";
 import sections from "components/classe/section/section.vue";
 export default {
   components: {
-    chapitre, 
+    chapitre,
     devoir,
     sections,
     sectionChapitre
@@ -16,7 +18,7 @@ export default {
     return {
       modalChapitre: false,
       modalSection: false,
-      idChapitre: null, 
+      idChapitre: null,
       rows_per_page_options: [0, 0],
       filter: "",
       columns: [{
@@ -72,33 +74,35 @@ export default {
       dark: true,
       selectedSecond: [{
         name: 'Eclair'
-      }]
+      }],
     }
   },
   computed: {
-    chapitres(){
-      return this.$store.state.classe.chapitres
-    },
-    classe(){
+    classe() {
       return this.$store.state.classe.classe
     },
+    chapitres() {
+      return this.$store.state.classe.chapitres
+    },
+    classeRef() {
+      return classesCollection.doc(this.$route.params.idClasse)
+    }
   },
   methods: {
-    creerChapitre(){
+    creerChapitre() {
       this.modalChapitre = true
-    }, 
-    creerSection(idChapitre){
+    },
+    creerSection(idChapitre) {
       console.log("hello world")
       this.modalSection = true
       this.idChapitre = idChapitre
     }
   },
-  mounted() {
+  async mounted() {
     let data = {
-      "token": this.$store.state.utilisateur.token, 
-      "idClass": this.classe.idClass, 
-      "self": this
+      "classeRef": this.classeRef
     }
-    this.$store.dispatch('classe/get_chapitres_classe', data)
+    this.$store.dispatch('classe/get_chapitres_with_sections', data)
+    console.log(this.chapitres)
   }
 }

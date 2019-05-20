@@ -1,40 +1,45 @@
 import axios from 'axios';
 import classeDialog from "components/classe/dialogs/classe/classe.vue";
+import {
+  fb,
+  elevesCollection
+} from 'assets/javascript/firebase.js'
 export default {
+  name: "classesaccueil",
   components: {
-    "classe-dialog":classeDialog
+    "classe-dialog": classeDialog
   },
   computed: {
-    classes(){
+    classes() {
       return this.$store.state.classe.classes
-    }, 
-    listMatiereOptions(){
+    },
+    listMatiereOptions() {
       let classes = this.$store.state.classe.classes
       let list = []
       let options = []
-      for(var i in classes){
-        if(list.indexOf(classes[i].matiere) == -1){
+      for (var i in classes) {
+        if (list.indexOf(classes[i].matiere) == -1) {
           list.push(classes[i].matiere)
           options.push({
-            label: (classes[i].matiere == undefined)? "NA": classes[i].matiere ,
-            value: (classes[i].matiere == undefined)? "NA": classes[i].matiere 
-          },)
+            label: (classes[i].matiere == undefined) ? "NA" : classes[i].matiere,
+            value: (classes[i].matiere == undefined) ? "NA" : classes[i].matiere
+          }, )
         }
       }
       console.log(options)
       return options
-    }, 
-    listNiveauOptions(){
+    },
+    listNiveauOptions() {
       let classes = this.$store.state.classe.classes
       let list = []
       let options = []
-      for(var i in classes){
-        if(list.indexOf(classes[i].niveau) == -1){
+      for (var i in classes) {
+        if (list.indexOf(classes[i].niveau) == -1) {
           list.push(classes[i].niveau)
           options.push({
-            label: (classes[i].niveau == undefined)? "NA": classes[i].niveau ,
-            value: (classes[i].niveau == undefined)? "NA": classes[i].niveau 
-          },)
+            label: (classes[i].niveau == undefined) ? "NA" : classes[i].niveau,
+            value: (classes[i].niveau == undefined) ? "NA" : classes[i].niveau
+          }, )
         }
       }
       console.log(options)
@@ -45,10 +50,10 @@ export default {
     return {
       rows_per_page_options: [0, 0],
       filter: "",
-      dialogClasse: false, 
+      dialogClasse: false,
       filterGroupe: [],
-      filterMatiere: [], 
-      filterNiveau: [], 
+      filterMatiere: [],
+      filterNiveau: [],
       filtrerPrix: {
         min: 0,
         max: 10000
@@ -127,37 +132,33 @@ export default {
     }
   },
   methods: {
-    seeClasse(classe){
-      let data = {
-        "token": this.$store.state.utilisateur.token, 
-        "idClass": classe.idClass, 
-        "self": this
-      }
-      this.$store.dispatch("classe/get_classe", data)
-      this.dialogClasse = true
-    }, 
+    seeClasse(classe) {
+      let nom = classe.nom.split(' ').join('_')
+      let next = '/classe/' + classe.id + "/" + nom + "/"
+      this.$router.push(next)
+    },
     modifier(row) {
       let classe = row.classe
       let next = '/classe/' + classe.idClass
       this.$router.push(next)
     },
-    appliquerFiltre(){
+    appliquerFiltre() {
       let data = {
-        "token": this.$store.state.utilisateur.token, 
+        "token": this.$store.state.utilisateur.token,
         "self": this
       }
       let filtre = ""
-      if(this.filterMatiere.length != 0){
+      if (this.filterMatiere.length != 0) {
         filtre = "matiere__in=" + this.filterMatiere.join()
       }
-      if(this.filterMatiere.length != 0){
+      if (this.filterMatiere.length != 0) {
         filtre = filtre + "&niveaux__in=" + this.filterNiveau.join()
       }
-      filtre = filtre +  "&prix__gte=" + this.filtrerPrix.min
-      filtre = filtre +  "&prix__lte=" + this.filtrerPrix.max
+      filtre = filtre + "&prix__gte=" + this.filtrerPrix.min
+      filtre = filtre + "&prix__lte=" + this.filtrerPrix.max
       data.filter = filtre
       this.$store.dispatch("classe/get_all_classes", data)
-    }, 
+    },
     get_enseignant_classe(classe) {
       let enseignants = []
       for (var i in classe.enseignants) {
@@ -167,14 +168,15 @@ export default {
         })
       }
       return enseignants
-    }, 
-    aller_en_cours(classe){
+    },
+    aller_en_cours(classe) {
       let next = '/cours/' + classe.idClass
       this.$store.commit("classe/GET_CLASSE", classe)
       this.$router.push(next)
     },
-    myclasse(idClasse){
-      return this.$store.state.utilisateur.classes.indexOf(idClasse) != -1
+    myclasse(idClasse) {
+      //return this.$store.state.utilisateur.classes.indexOf(idClasse) != -1
+      return -1
     },
     async inscription(classe) {
       let formData = new FormData()
@@ -194,25 +196,25 @@ export default {
         let erreur = e.data.data
         if (erreur.problemeSolde == true) {
           let message = "il vous manque " + erreur.reste + " FCFA dans votre solde Homeschool - Cameroon pour finaliser votre inscription à ce cours! Voulez-vous créditer votre compte?"
-            this.$q.dialog({
-              title: 'Erreur',
-              message: message,
-              ok: {
-                push: true,
-                color: "positive",
-                label: 'Crediter'
-              },
-              cancel: {
-                push: true,
-                color: 'negative',
-                class: "",
-                label: 'Non'
-              }
-            }).then(() => {
-              this.$q.notify('Agreed!')
-            }).catch(() => {
-              this.$q.notify('Disagreed...')
-            })
+          this.$q.dialog({
+            title: 'Erreur',
+            message: message,
+            ok: {
+              push: true,
+              color: "positive",
+              label: 'Crediter'
+            },
+            cancel: {
+              push: true,
+              color: 'negative',
+              class: "",
+              label: 'Non'
+            }
+          }).then(() => {
+            this.$q.notify('Agreed!')
+          }).catch(() => {
+            this.$q.notify('Disagreed...')
+          })
         }
       }
     }

@@ -21,50 +21,46 @@ export default {
     classes() {
       return this.$store.state.question.classes
     },
+    sections() {
+      return this.$store.state.question.sections
+    },
     chapitres() {
-      return this.$store.state.question.chapitres
+      return this.$store.state.classe.chapitres
     },
   },
   methods: {
-    classeChange(idClass) {
+    /*classeChange(idClass) {
       console.log(idClass)
       let data = {
         "token": this.$store.state.utilisateur.token,
         "idClass": idClass
       }
       this.$store.dispatch('question/get_chapitres_classe_select', data)
-    },
+    },*/
     creerDevoir() {
       let debut = this.dateDebut.split(' ')[0]
       let fin = this.dateFin.split(' ')[0]
       let questions = this.$store.state.quiz.questions
-      let numeroDesQuestions = ""
-      for(var i in questions){
-        numeroDesQuestions = questions[i].idQuestion + ";" + numeroDesQuestions 
-      }
       let data = {
         "idSection": this.section,
-        "idClasse": this.classe,
-        "idChapitre": this.chapitre,
+        "idClasse": this.$store.state.classe.classe.id,
+        "idChapitre": this.chapitre.id,
         "consignes": this.consigne,
         "titre": this.titre,
         "correction": this.correction,
         "dateFin": fin.replace(/\//g, '-'),
         "dateDebut": debut.replace(/\//g, '-'),
-        "numeroDesQuestions": numeroDesQuestions,
+        "questions": questions,
         "nombreEssai": this.nombreEssai,
-        "token": this.$store.state.utilisateur.token
       }
       console.log(data)
       this.$store.dispatch('quiz/creer_devoir', data)
       this.fermer()
     },
-    chapitreChange(idChapitre) {
-      let data = {
-        "token": this.$store.state.utilisateur.token,
-        "idChapitre": idChapitre
-      }
-      this.$store.dispatch('question/get_chapitre_sections_select', data)
+    chapitreChange(chapitre) {
+      console.log(chapitre.value.sections)
+      this.chap = chapitre
+      this.$store.commit('question/SET_SECTIONS', chapitre.value.sections)
     },
     fermer() {
       this.$emit("update:modalDevoir", false)

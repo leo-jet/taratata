@@ -1,10 +1,15 @@
-import axios from 'axios';
+import {
+  utilisateursCollection
+} from 'assets/javascript/firebase.js'
 export default {
   components: {},
-  computed: {},
+  computed: {
+    email() {
+      return this.$store.state.utilisateur.utilisateur.email
+    }
+  },
   data() {
     return {
-      email: "",
       quartier: "",
       ville: "",
       edition: false,
@@ -18,31 +23,16 @@ export default {
       this.edition = true
     },
     async enregistrement() {
-      let formData = new FormData()
-      formData.append("email", this.email)
-      formData.append("quatier", this.quartier)
-      formData.append("ville", this.ville)
-      let data = {
-        "token": this.$store.state.utilisateur.token,
-        "self": this,
-        "formData": formData,
-        "id": this.$store.state.utilisateur.id
+      let formData = {
+        "ville": this.ville,
+        "quartier": this.quartier,
       }
-      try {
-        this.$q.loading.show()
-        let promiseEnregistrement = await this.$store.dispatch('utilisateur/editer_information', data)
-        promiseEnregistrement.then((response) => {
-          console.log(response)
-        })
-      } catch (e) {
-        console.log(e)
-        this.$q.loading.hide()
-      }
+      utilisateursCollection.doc(this.email).update(formData)
+      this.$store.dispatch("utilisateur/get_user", {email: this.email})
     }
   },
   mounted() {
-    this.quartier = this.$store.state.utilisateur.quartier
-    this.ville = this.$store.state.utilisateur.ville
-    this.email = this.$store.state.utilisateur.email
+    this.quartier = this.$store.state.utilisateur.utilisateur.quartier
+    this.ville = this.$store.state.utilisateur.utilisateur.ville
   }
 }

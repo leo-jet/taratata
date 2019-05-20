@@ -1,0 +1,7 @@
+<section>
+  <q-layout-drawer side="right" v-model="discussionDrawer" :overlay="rightOverlay" :behavior="rightBehavior"
+    :breakpoint="rightBreakpoint" :content-class="$q.theme === 'mat' ? 'bg-grey-3' : null" width="400">
+    <q-list-header>Right Panel</q-list-header>
+    <commentcours></commentcours>
+  </q-layout-drawer>
+</section>

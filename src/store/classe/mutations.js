@@ -15,6 +15,10 @@ export const GET_CLASSE = (state, payload) => {
   state.classe = payload
 }
 
+export const SET_CLASSE = (state, payload) => {
+  state.classe = payload
+}
+
 export const GET_CHAPITRES_CLASSE = (state, payload) => {
   state.chapitres = payload
 }

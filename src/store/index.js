@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueQuillEditor from 'vue-quill-editor'
+import CKeditor from '@ckeditor/ckeditor5-vue'
 import VueMathjax from 'vue-mathjax'
 Vue.use(VueMathjax)
+Vue.use( CKeditor );
 // require styles
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -14,6 +16,7 @@ import classe from './classe'
 import question from './question'
 import quiz from './quiz'
 import cours from './cours'
+import layoutDemo from './layoutDemo'
 import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 Vue.use(VueQuillEditor, /* { default global options } */)
@@ -34,9 +37,9 @@ export default function ( /* { ssrContext } */ ) {
       classe,
       question,
       quiz,
-      cours
-    },
-    plugins: [createPersistedState()],
+      cours,
+      layoutDemo
+    }
   })
 
   return Store

@@ -1,0 +1,18 @@
+<section>
+  <div class="row justify-center">
+    <div class="col-10">
+      <q-card inline style="width:100%"  dark class="q-ma-sm">
+        <q-toolbar color="primary">
+          <q-toolbar-title>
+            Section {{section.numero}}: {{section.titre}}
+          </q-toolbar-title>
+          <q-btn flat round dense icon="mail" />
+        </q-toolbar>
+        <q-card-main>
+            <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+          <div v-html="section.contenu"></div>
+        </q-card-main>
+      </q-card>
+    </div>
+  </div>
+</section>

@@ -1,11 +1,13 @@
 import academie from "components/profil/academie/academie.vue";
 import contact from "components/profil/contact/contact.vue";
+import cardTotal from "components/cardTotal/cardTotal.vue";
 import information from "components/profil/information/information.vue";
 export default {
   components: {
     information,
     academie, 
-    contact
+    contact,
+    cardTotal
   },
   computed: {},
   data() {

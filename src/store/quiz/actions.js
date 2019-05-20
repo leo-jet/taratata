@@ -1,17 +1,12 @@
-import axios from 'axios'
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = "*"
-axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true
-axios.defaults.headers.common['Content-Type'] = 'multipart/form-data'
+import {
+  classesCollection
+} from 'assets/javascript/firebase.js'
 
 export const creer_devoir = async ({
   commit
 }, data) => {
-  let token = data.token
-  axios.defaults.headers.common['Authorization'] = "JWT " + token
-  let url = process.env.API + "/devoir/"
-  return axios.post(url, data).then((response) => {
-    commit('SET_DEVOIR', response.data)
-  })
+
+  classesCollection.doc(data.idClasse).collection("chapitres").doc(data.idChapitre).collection("sections").doc(data.idSection).collection("devoirs").add(data)
 }
 
 export function set_quiz (context, quiz) {

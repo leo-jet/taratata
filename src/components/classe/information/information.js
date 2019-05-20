@@ -1,10 +1,15 @@
-import axios from 'axios';
+import {
+  classesCollection
+} from 'assets/javascript/firebase.js'
 export default {
   components: {},
   name: 'information_classe',
   computed: {
     classe() {
       return this.$store.state.classe.classe
+    },
+    classeRef() {
+      return classesCollection.doc(this.$route.params.idClasse)
     }
   },
   data() {
@@ -85,61 +90,58 @@ export default {
     }
   },
   methods: {
-    editclasse(data) {
-      axios.defaults.headers.common['Access-Control-Allow-Origin'] = "*"
-      axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true
-      axios.defaults.headers.common['Authorization'] = "JWT " + this.$store.state.utilisateur.token
-      axios.defaults.headers.common['Content-Type'] = 'multipart/form-data'
-      let url = process.env.API + "/classe/" + this.classe.idClass + '/'
-      axios.put(url, data).then((response) => {
-          this.$store.commit("classe/init_classe", response.data)
-          let message = "Classe bien modifiée!"
-          let next = '/classe/' + response.data.idClass
-          this.$router.push(next)
-          this.$q.notify({
-            type: "positive",
-            message: message,
-          })
-        })
-        .catch((error) => {
-          let message = "Identifiant ou mot de pass incorrect!" + error
-          this.$q.notify({
-            type: "positive",
-            message: message,
-          })
-        })
-    },
     input_tags(newVal) {
-      let data = new FormData()
-      data.append("tags", JSON.stringify(newVal))
-      this.editclasse(data)
+      this.updateClasse({
+        "tags": newVal
+      })
     },
     input_dateFinInscription(newVal) {
-      let data = new FormData()
-      data.append("dateFinInscription", newVal.replace(/\//g, '-'))
-      this.editclasse(data)
+      this.updateClasse({
+        "dateFinInscription": newVal.replace(/\//g, '-')
+      })
     },
     input_matiere(newVal) {
-      let data = new FormData()
-      data.append("matiere", newVal)
-      this.editclasse(data)
+      this.updateClasse({
+        "matiere": newVal
+      })
     },
     input_niveau(newVal) {
-      let data = new FormData()
-      data.append("niveau", newVal)
-      this.editclasse(data)
+      this.updateClasse({
+        "niveau": newVal
+      })
     },
     input_description(newVal) {
-      let data = new FormData()
-      data.append("description", newVal)
-      this.editclasse(data)
+      this.updateClasse({
+        "description": newVal
+      })
+    },
+    updateClasse(dict) {
+      this.classeRef.update(dict)
+        .then(function () {
+          console.log("Document successfully updated!");
+        })
+        .catch(function (error) {
+          // The document probably doesn't exist.
+          console.error("Error updating document: ", error);
+        });
     }
   },
   mounted() {
-    this.tags = JSON.parse(this.classe.tags)
-    this.dateFinInscription = this.classe.dateFinInscription
-    this.matiere = this.classe.matiere
-    this.niveau = this.classe.niveau
-    this.description = this.classe.description
+    var self = this
+    this.classeRef.get().then(function (doc) {
+      if (doc.exists) {
+        console.log("Document data:", doc.data());
+        var docInf = doc.data()
+        self.tags = docInf.tags
+        self.dateFinInscription = docInf.dateFinInscription
+        self.matiere = docInf.matiere
+        self.niveau = docInf.niveau
+        self.description = docInf.description
+      } else {
+        console.log("No such document!");
+      }
+    }).catch(function (error) {
+      console.log("Error getting document:", error);
+    });
   }
 }

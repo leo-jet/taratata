@@ -2,7 +2,7 @@
   <q-table grid hide-header :data="classes" :pagination="pagination" hide-bottom :columns="columns" :filter="filter"
     :visible-columns="visibleColumns" row-key="name">
     <template slot="top-right" slot-scope="props">
-      <q-btn flat color="green" to="/classe/creer/">Creer</q-btn>
+      <q-btn flat color="green" @click.native="creerClasse()">Creer</q-btn>
     </template>
     <div slot="item" slot-scope="props" class="col-xs-12 col-sm-6 col-md-4">
       <q-card>

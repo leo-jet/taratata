@@ -4,17 +4,16 @@ import chapitres from "components/classe/chapitres/chapitres.vue";
 import eleve from "components/classe/eleve/eleve.vue";
 import quiz from "components/classe/quiz/quiz.vue";
 import axios from 'axios';
-import { Loading } from 'quasar'
+import {
+  Loading
+} from 'quasar'
+import {
+  fb,
+  classesCollection
+} from 'assets/javascript/firebase.js'
 export default {
-  preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext }) {
-    let data = {
-      token: store.state.utilisateur.token, 
-      idClass: currentRoute.params.idClasse
-    }
-    return store.dispatch('classe/get_classe', data)
-  },
   components: {
-    information, 
+    information,
     quiz,
     enseignants,
     chapitres,
@@ -32,6 +31,9 @@ export default {
   computed: {
     classe() {
       return this.$store.state.classe.classe
+    },
+    classeRef() {
+      return classesCollection.doc(this.$route.params.idClasse)
     }
   },
   methods: {
@@ -56,52 +58,56 @@ export default {
         })
     },
     modifier() {
-      let data = new FormData()
-      data.append("nom", this.nom)
-      data.append("dateDebut", this.dateDebut.replace(/\//g, '-'))
-      data.append("dateFin", this.dateFin.replace(/\//g, '-'))
-      data.append("prix", this.prix)
-      this.editclasse(data)
+      var self = this
+      var info = {
+        nom: self.nom,
+        dateDebut: self.dateDebut,
+        dateFin: self.dateFin,
+        prix: self.prix
+      }
+      this.classeRef.set(info)
+        .then(function () {
+          console.log("Document modifié: ");
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
     },
     creer() {
-      let url = process.env.API + "/classe/"
-      let data = new FormData()
-      data.append("nom", this.nom)
-      data.append("dateDebut", this.dateDebut.replace(/\//g, '-'))
-      data.append("dateFin", this.dateFin.replace(/\//g, '-'))
-      data.append("prix", this.prix)
-      axios.post(url, data).then((response) => {
-          this.$store.commit("classe/init_classe", response.data)
-          let message = "Classe bien créée!"
-          let next = '/classe/' + response.data.idClass
-          this.$router.push(next)
-          this.$q.notify({
-            type: "positive",
-            message: message,
-          })
+      var self = this
+      this.classeRef.set({
+          nom: self.nom,
+          dateDebut: self.dateDebut,
+          dateFin: self.dateFin,
+          prix: self.prix
         })
-        .catch((error) => {
-          let message = "Identifiant ou mot de pass incorrect!" + error
-          this.$q.notify({
-            type: "positive",
-            message: message,
-          })
+        .then(function () {
+          let next = '/classe/' + self.nom.replace(/ /g, '_')
+          self.$router.push(next)
+          console.log("Document written with ID: ");
         })
-    }
-  }, 
-  mounted(){
-    axios.defaults.headers.common['Access-Control-Allow-Origin'] = "*"
-    axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true
-    axios.defaults.headers.common['Authorization'] = "JWT " + this.$store.state.utilisateur.token
-    axios.defaults.headers.common['Content-Type'] = 'multipart/form-data'
-    this.nom = this.classe.nom
-    this.dateDebut = this.classe.dateDebut
-    this.dateFin = this.classe.dateFin
-    this.prix = this.classe.prix
-    let data = {
-      token: this.$store.state.utilisateur.token, 
-      idClass: this.$route.params.idClasse
-    } 
-    this.$store.dispatch('classe/get_chapitres_classe', data)
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
+    },
+  },
+  mounted() {
+    var self = this
+    this.classeRef.get().then(function (doc) {
+      if (doc.exists) {
+        console.log("Document data:", doc.data());
+        var docInf = doc.data()
+        docInf.id = doc.id
+        self.nom = docInf.nom
+        self.dateDebut = docInf.dateDebut
+        self.dateFin = docInf.dateFin
+        self.prix = docInf.prix
+        self.$store.commit("classe/init_classe", docInf)
+      } else {
+        console.log("No such document!");
+      }
+    }).catch(function (error) {
+      console.log("Error getting document:", error);
+    });
   }
 }

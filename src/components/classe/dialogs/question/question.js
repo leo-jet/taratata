@@ -2,6 +2,11 @@ import axios from 'axios';
 import propositionqcm from "components/classe/propositionqcm/propositionqcm.vue";
 import propositionrelationelle from "components/classe/propositionrelationelle/propositionrelationelle.vue";
 import propositionschema from "components/classe/propositionschema/propositionschema.vue";
+import {
+  classesCollection,
+  questionsCollection,
+  sectionsCollection
+} from 'assets/javascript/firebase.js'
 export default {
   props: ["modalQuestion"],
   components: {
@@ -12,10 +17,10 @@ export default {
   name: 'classe_dialog_question',
   computed: {
     classes() {
-      return this.$store.state.question.classes
+      return [this.$store.state.classe.classe]
     },
     chapitres() {
-      return this.$store.state.question.chapitres
+      return this.$store.state.classe.chapitres
     },
     sections() {
       return this.$store.state.question.sections
@@ -25,13 +30,79 @@ export default {
     },
     propositions() {
       return this.$store.state.question.propositions
+    },
+    classeRef() {
+      return classesCollection.doc(this.$route.params.idClasse)
     }
   },
   data() {
     return {
       classe: null,
+      stepper: "",
       chapitre: null,
+      chap: null,
       section: null,
+      editorOptionHideToolbar: {
+        theme: "snow",
+        modules: {
+          toolbar: false
+        }
+      },
+      editorOption: {
+        theme: 'snow',
+        placeholder: 'Your questing here... $s^r$',
+        modules: {
+          'toolbar': [
+            ['link', 'image', 'video', 'formula'],
+            ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+            ['blockquote', 'code-block'],
+
+            [{
+              'header': 1
+            }, {
+              'header': 2
+            }], // custom button values
+            [{
+              'list': 'ordered'
+            }, {
+              'list': 'bullet'
+            }],
+            [{
+              'script': 'sub'
+            }, {
+              'script': 'super'
+            }], // superscript/subscript
+            [{
+              'indent': '-1'
+            }, {
+              'indent': '+1'
+            }], // outdent/indent
+            [{
+              'direction': 'rtl'
+            }], // text direction
+
+            [{
+              'size': ['small', false, 'large', 'huge']
+            }], // custom dropdown
+            [{
+              'header': [1, 2, 3, 4, 5, 6, false]
+            }],
+
+            [{
+              'color': []
+            }, {
+              'background': []
+            }], // dropdown with defaults from theme
+            [{
+              'font': []
+            }],
+            [{
+              'align': []
+            }],
+            ['formula']
+          ]
+        },
+      },
       types: [{
           value: "qcm",
           label: "Question à choix multiples"
@@ -83,12 +154,10 @@ export default {
       }
       this.$store.dispatch('question/get_chapitres_classe_select', data)
     },
-    chapitreChange(idChapitre) {
-      let data = {
-        "token": this.$store.state.utilisateur.token,
-        "idChapitre": idChapitre
-      }
-      this.$store.dispatch('question/get_chapitre_sections_select', data)
+    chapitreChange(chapitre) {
+      console.log(chapitre)
+      this.chap = chapitre
+      this.$store.commit('question/SET_SECTIONS', chapitre.sections)
     },
     sectionChange(idSection) {
       let data = {
@@ -97,28 +166,26 @@ export default {
       }
       this.$store.dispatch('question/get_chapitres_classe_select', data)
     },
-    creerQuestion() {
+    async creerQuestion() {
       let data = {
-        "idSection": this.section,
+        "section": this.section,
         "enonce": this.enonce,
         "explication": this.explication,
         "numero": this.numero,
         "type": this.type,
-        "image": (this.$refs.image == undefined) ? null : this.$refs.image.files[0],
-        "token": this.$store.state.utilisateur.token
+        "chapitre": this.chap.numero,
+        "propositions": this.$store.state.question.propositions
       }
-      this.$store.dispatch('question/creer_question', data)
+      var questionDoc = await this.classeRef.collection("chapitres").doc( this.chap.numero.toString()).collection("sections").doc(this.section.toString()).collection("questions").add(data)
+      questionsCollection.doc(questionDoc.id).set(data)
+      sectionsCollection.doc(this.section.toString()).collection("questions").doc(questionDoc.id).set(data)
+      this.fermer()
     },
     clickAddQuestion() {
       this.addQuestion = true
     }
   },
-  mounted() {
-    let data = {
-      "token": this.$store.state.utilisateur.token,
-    }
-    this.$store.dispatch('question/get_classe_select', data)
-  },
+  mounted() {},
   destroyed() {
     this.$store.commit('question/INIT_QUESTION')
   }

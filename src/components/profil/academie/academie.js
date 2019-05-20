@@ -1,14 +1,121 @@
-import axios from 'axios';
+import {
+  utilisateursCollection
+} from 'assets/javascript/firebase.js'
 export default {
   components: {},
-  computed: {},
+  computed: {
+    email() {
+      return this.$store.state.utilisateur.utilisateur.email
+    }
+  },
   data() {
     return {
       etablissement: "",
-      niveau: "",
+      niveau: 'terminale',
+      niveaux: [
+        {
+          label: 'Master 2',
+          value: 'master2'
+        },
+        {
+          label: 'Master 1',
+          value: 'master1'
+        },
+        {
+          label: 'Licence 3',
+          value: 'licence3'
+        },
+        {
+          label: 'Licence 2',
+          value: 'licence2'
+        },
+        {
+          label: 'Licence 1',
+          value: 'licence1'
+        },
+        {
+          label: 'Terminale',
+          value: 'terminale'
+        },
+        {
+          label: 'Première',
+          value: 'premiere'
+        },
+        {
+          label: 'Seconde',
+          value: 'seconde'
+        },
+        {
+          label: 'Troisième',
+          value: 'troisieme'
+        },
+        {
+          label: 'Quatrième',
+          value: 'quatrieme'
+        },
+        {
+          label: 'Cinquième',
+          value: 'cinquieme'
+        },
+        {
+          label: 'Sixème',
+          value: 'sixieme'
+        }
+      ],
+      concours: [
+        {
+          label: 'Ecole normale supérieure de Bambili',
+          value: 'ensbambili'
+        },
+        {
+          label: "Ecole Africaine de la Météorolgie et de l'Aviation Civile",
+          value: 'asecna'
+        },
+        {
+          label: "Ecole Africaine des Métiers de l’Architecture et de l’Urbanisme",
+          value: 'eamau'
+        },
+        {
+          label: 'Licence 2',
+          value: 'licence2'
+        },
+        {
+          label: 'Licence 1',
+          value: 'licence1'
+        },
+        {
+          label: 'Terminale',
+          value: 'terminale'
+        },
+        {
+          label: 'Première',
+          value: 'premiere'
+        },
+        {
+          label: 'Seconde',
+          value: 'seconde'
+        },
+        {
+          label: 'Troisième',
+          value: 'troisieme'
+        },
+        {
+          label: 'Quatrième',
+          value: 'quatrieme'
+        },
+        {
+          label: 'Cinquième',
+          value: 'cinquieme'
+        },
+        {
+          label: 'Sixème',
+          value: 'sixieme'
+        }
+      ],
       concours1: "",
       concours2: "",
-      concours3: ""
+      concours3: "",
+      edition: false
     }
   },
   methods: {
@@ -19,33 +126,18 @@ export default {
       this.edition = true
     },
     async enregistrement() {
-      let formData = new FormData()
-      formData.append("etablissement", this.etablissement)
-      formData.append("niveau", this.niveau)
-      formData.append("concours1", this.concours1)
-      formData.append("concours2", this.concours2)
-      formData.append("concours3", this.concours3)
-      let data = {
-        "token": this.$store.state.utilisateur.token,
-        "self": this,
-        "formData": formData,
-        "id": this.$store.state.utilisateur.id
+      let formData = {
+        "etablissement": this.etablissement,
+        "niveau": this.niveau,
+        "concours1": this.concours1
       }
-      try {
-        this.$q.loading.show()
-        let promiseEnregistrement = await this.$store.dispatch('utilisateur/editer_information', data)
-        promiseEnregistrement.then((response) => {
-          console.log(response)
-        })
-      } catch (e) {
-        console.log(e)
-        this.$q.loading.hide()
-      }
+      utilisateursCollection.doc(this.email).update(formData)
+      this.$store.dispatch("utilisateur/get_user", {email: this.email})
     }
   },
   mounted() {
-    this.nom = this.$store.state.utilisateur.nom
-    this.prenom = this.$store.state.utilisateur.prenom
-    this.dateNaissance = this.$store.state.utilisateur.dateNaissance
+    this.etablissement = this.$store.state.utilisateur.utilisateur.etablissement
+    this.niveau = this.$store.state.utilisateur.utilisateur.niveau
+    this.concours1 = this.$store.state.utilisateur.utilisateur.concours1
   }
 }

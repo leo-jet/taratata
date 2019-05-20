@@ -1,59 +1,51 @@
 <section style="padding: 10px">
-    <q-btn-dropdown color="primary" label="Filter la liste par" style="width: 100%">
-  <div class="column justify-center" style="margin-bottom: 10px; margin-top: 20px;">
-    <div class="col-2" style="padding: 5px; margin-right:5%" >
-      <q-select multiple chips color="teal" float-label="Par matière" v-model="filterMatiere" :options="listMatiereOptions" />
+  <q-btn-dropdown color="primary" label="Filter la liste par" style="width: 100%">
+    <div class="column justify-center" style="margin-bottom: 10px; margin-top: 20px;">
+      <div class="col-2" style="padding: 5px; margin-right:5%">
+        <q-select multiple chips color="teal" float-label="Par matière" v-model="filterMatiere"
+          :options="listMatiereOptions" />
+      </div>
+      <div class="col-3" style="padding: 5px; margin-right:5%">
+        <q-range v-model="filtrerPrix" :min="0" :max="10000" :step="100" label color="teal" label-always />
+      </div>
+      <div class="col-2" style="padding: 5px; margin-right:5%">
+        <q-select multiple chips color="teal" float-label="Par niveau" v-model="filterNiveau"
+          :options="listNiveauOptions" />
+      </div>
+      <div class="col-1" style="padding: 5px; margin-right:5%">
+        <q-btn color="green" @click="appliquerFiltre()">Appliquer</q-btn>
+      </div>
     </div>
-    <div class="col-3"  style="padding: 5px; margin-right:5%">
-      <q-range v-model="filtrerPrix" :min="0" :max="10000" :step="100" label color="teal" label-always />
-    </div>
-    <div class="col-2" style="padding: 5px; margin-right:5%">
-      <q-select multiple chips color="teal" float-label="Par niveau" v-model="filterNiveau" :options="listNiveauOptions" />
-    </div>
-    <div class="col-1" style="padding: 5px; margin-right:5%" >
-      <q-btn color="green" @click="appliquerFiltre()">Appliquer</q-btn>
-    </div>
-  </div>
-</q-btn-dropdown>
+  </q-btn-dropdown>
   <q-table grid hide-header :data="classes" :pagination="pagination" hide-bottom :columns="columns" :filter="filter"
     :visible-columns="visibleColumns" row-key="name">
-    <div slot="item" slot-scope="props" style="padding: 5px" class="col-xs-12 col-sm-6 col-md-4">
-      <q-card>
-        <q-card>
-          <q-card-media>
+    <div slot="item" slot-scope="props" class="col-xs-12 col-sm-6 col-md-4 q-pa-xs">
+      <q-card @click.native="seeClasse(props.row)" style="cursor:pointer;min-height: 400px">
+        <q-card-media>
 
-          </q-card-media>
-          <q-card-title class="relative-position">
-            <div class="ellipsis">{{props.row.nom}}</div>
-            <q-rating slot="subtitle" v-model="stars" :max="5" />
-            <div slot="right" class="row items-center text-weight-bold q-subheading">
-              {{props.row.prix}} FCFA
-            </div>
-          </q-card-title>
-          <q-card-separator />
-          <q-card-main>
-            <p>{{props.row.niveau}} | {{props.row.matiere}}</p>
-            <div ref="description" style="padding: 10px">
-                <span v-html="props.row.description"></span>
-            </div>
-            <p style="padding-top: 10px">
-              <div class="q-subheading text-primary">Enseignants</div>
-              <q-tree :nodes="get_enseignant_classe(props.row)" node-key="label">
-                <div slot="default-header" slot-scope="prop" class="row items-center">
-                  <q-icon name="fas fa-chalkboard-teacher" class="q-mr-sm" />
-                  <div>{{ prop.node.label }}</div>
-                </div>
-              </q-tree>
-            </p>
-          </q-card-main>
-          <q-card-separator />
-          <q-card-actions>
-            <!--<q-btn flat round icon="event" />-->
-            <q-btn color="green" v-if="myclasse(props.row.idClass) == true" @click.native="aller_en_cours(props.row)">Aller en cours</q-btn>
-            <q-btn color="green" v-else @click.native="inscription(props.row)">S'inscrire</q-btn>
-            <q-btn flat color="primary" @click="seeClasse(props.row)">Voir</q-btn>
-          </q-card-actions>
-        </q-card>
+        </q-card-media>
+        <q-list highlight inset-separator>
+          <q-item multiline>
+            <q-item-main>
+              <q-item-tile label lines="2">{{props.row.nom}}</q-item-tile>
+            </q-item-main>
+            <q-item-side right>
+              <q-item-tile stamp>{{props.row.prix}} FCFA</q-item-tile>
+              <q-item-tile icon="mail" color="primary" />
+            </q-item-side>
+          </q-item>
+        </q-list>
+        <q-card-separator />
+        <q-card-main>
+          <p>
+            <q-chip small color="primary">
+              {{props.row.niveau}}
+            </q-chip> | {{props.row.matiere}}
+          </p>
+          <div ref="description" style="padding: 10px">
+            <span v-html="props.row.description"></span>
+          </div>
+        </q-card-main>
       </q-card>
     </div>
   </q-table>

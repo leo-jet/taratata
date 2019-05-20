@@ -1,0 +1,59 @@
+<div>
+  <q-toolbar color="grey" style="text-align: center;vertical-align: middle">
+    <q-toolbar-title>
+      {{classe.nom}}
+    </q-toolbar-title>
+    <q-chip label class="q-ma-md" color="primary">
+      {{classe.prix}} FCFA
+    </q-chip>
+
+    <div v-if="$q.platform.is.desktop">
+      <div id="fb-root"></div>
+      <div class="fb-like" style="text-align: center;vertical-align: middle"
+        data-href="https://developers.facebook.com/docs/plugins/" data-width="" data-layout="button_count"
+        data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>
+      <q-btn color="green" v-if="maclasse == false" class="q-ma-md" @click.native="inscription()">S'inscrirer</q-btn>
+    </div>
+    <div v-else>
+      <q-btn-dropdown icon="menu" color="info">
+        <div class="column justify-center" style="margin-bottom: 10px; margin-top: 20px;">
+          <div class="col-2" style="padding: 5px; width: 100%">
+            <q-btn color="green" @click.native="inscription()" class="full-width">S'inscrirer</q-btn>
+          </div>
+          <div class="col-2" style="padding: 5px; width: 100%">
+            <q-btn color="red" @click.native="fermer()" class="full-width">fermer</q-btn>
+          </div>
+        </div>
+      </q-btn-dropdown>
+    </div>
+  </q-toolbar>
+  <q-tabs class="shadow-1" animated swipeable color="secondary" glossy align="justify">
+    <q-tab default name="information" slot="title" label="A propos" />
+    <q-tab name="chapitres" slot="title" label="Programme" />
+    <q-tab-pane name="information">
+      <div class="row justify-center">
+        <div class="col-6 q-pa-xs">
+          <introcours :description.sync="classe.description"></introcours>
+        </div>
+        <div class="col-6 q-pa-xs">
+          <videolive></videolive>
+        </div>
+      </div>
+      <div class="row justify-center">
+        <div class="col-6 q-pa-xs">
+          <commentcours></commentcours>
+        </div>
+        <div class="col-6 q-pa-xs">
+          <videolive></videolive>
+        </div>
+      </div>
+    </q-tab-pane>
+    <q-tab-pane name="chapitres">
+      <q-table grid hide-header :data="chapitres" hide-bottom :columns="columns" row-key="idEnseignant">
+        <div slot="item" slot-scope="props" style="padding: 5px" class="col-xs-12 col-sm-6 col-md-6">
+          <cardchapitre :chapitre.sync="props.row"></cardchapitre>
+        </div>
+      </q-table>
+    </q-tab-pane>
+  </q-tabs>
+</div>

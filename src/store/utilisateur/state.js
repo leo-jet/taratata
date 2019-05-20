@@ -1,19 +1,4 @@
 export default {
-  nom: "", 
-  prenom: "",
-  groupes: [],
-  connecte: false,
-  token: null, 
-  username: "", 
-  dateNaissance: "", 
-  lieuNaissance: "", 
-  specialite: "", 
-  telephone: "", 
-  email: "", 
-  situation: "", 
-  ville: "", 
-  quartier: "", 
-  id: "", 
-  classes: []
-
+  utilisateur: JSON.parse(localStorage.getItem('utilisateur')),
+  connecte: false
 }

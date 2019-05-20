@@ -10,30 +10,17 @@
     </q-toolbar>
     <div style="padding: 15px" ref="first">
       <div class="row">
-        <div class="col-12">
+        <div class="col-8" style="padding: 15px">
           <q-input v-model.lazy="intitule" float-label="Intitule" />
         </div>
-      </div>
-      <div class="row">
         <div class="col-4" style="padding: 15px">
           <q-input v-model.lazy="numero" float-label="Numéro" type="number" />
         </div>
-        <div class="col-4" style="padding: 15px">
-          <q-uploader extensions=".pdf" ref="fichier" stack-label="Contenu en fichier PDF" :url="contenuFichier"
-            auto-expand />
-        </div>
-        <div class="col-4" style="padding: 15px">
-          <q-uploader extensions=".pdf" ref="video" stack-label="Contenu en Video" :url="contenuFichier" auto-expand />
-        </div>
       </div>
       <div class="row">
-        <div class="col-6">
-          <quill-editor v-model="content" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur($event)"
-            @focus="onEditorFocus($event)" @ready="onEditorReady($event)" @change="onEditorChange($event)">
+        <div class="col-12" style="padding: 15px">
+          <quill-editor v-model="content" ref="myQuillEditor"style="height:200px;padding: 15px" :options="editorOption">
           </quill-editor>
-        </div>
-        <div class="col-6">
-          <span ref="myContent" v-html="content"></span>
         </div>
       </div>
     </div>

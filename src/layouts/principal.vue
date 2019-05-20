@@ -1,10 +1,7 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lff">
     <q-layout-header>
-      <q-toolbar
-        color="primary"
-        dark
-      >
+      <q-toolbar color="primary" dark>
         <img
           class="ml-2"
           height="40"
@@ -20,27 +17,45 @@
           v-if="$q.platform.is.desktop"
         >
         <q-toolbar-title>
-          Homeschool 
+          Homeschool
           <div slot="subtitle">Together let's build tomorrow education</div>
         </q-toolbar-title>
-        <q-btn v-if="$q.platform.is.mobile" flat round @click="mobileMenu = !mobileMenu" dense icon="menu" />
+        <q-btn
+          v-if="$q.platform.is.mobile"
+          flat
+          round
+          @click="mobileMenu = !mobileMenu"
+          dense
+          icon="menu"
+        />
         <q-btn color="info" to="/" style="margin-right:10px" v-if="$q.platform.is.desktop">ACCUEIL</q-btn>
-        <q-btn color="yellow" to="/" style="margin-right:10px" v-if="$q.platform.is.desktop">Valider son compte</q-btn>
+        <q-btn
+          color="green"
+          to="/profil/login"
+          style="margin-right:10px"
+          v-if="$q.platform.is.desktop && $store.state.utilisateur.utilisateur == undefined"
+        >Connexion</q-btn>
         <q-btn-dropdown
           color="info"
           :label="nomPrenom"
-          v-if="$q.platform.is.desktop && $store.state.utilisateur.connecte == true"
+          v-else
         >
           <q-list link>
-            <q-item v-close-overlay to="profil/information">
-              <q-item-side icon="fas fa-user" inverted color="primary" />
+            <q-item v-close-overlay to="/compte" v-if="user.type == 'enseignant'">
+              <q-item-side icon="fas fa-user" inverted color="primary"/>
+              <q-item-main>
+                <q-item-tile label>Profil</q-item-tile>
+              </q-item-main>
+            </q-item>
+            <q-item v-close-overlay to="/profil/information" v-else>
+              <q-item-side icon="fas fa-user" inverted color="primary"/>
               <q-item-main>
                 <q-item-tile label>Profil</q-item-tile>
               </q-item-main>
             </q-item>
             <q-item-separator/>
-            <q-item v-close-overlay @click="deconnexion()">
-              <q-item-side icon="fas fa-sign-out-alt" inverted color="red" />
+            <q-item v-close-overlay @click.native="deconnexion()">
+              <q-item-side icon="fas fa-sign-out-alt" inverted color="red"/>
               <q-item-main>
                 <q-item-tile label>Déconnexion</q-item-tile>
               </q-item-main>
@@ -53,21 +68,26 @@
       <q-list no-border link inset-delimiter>
         <q-list-header>Menu principal</q-list-header>
         <q-item to="/">
-          <q-item-side icon="home" />
+          <q-item-side icon="home"/>
           <q-item-main label="Accueil"/>
         </q-item>
-        <q-item to="compte">
-          <q-item-side icon="settings" />
-          <q-item-main label="Cours"/>
+        <q-item to="/profil/information">
+          <q-item-side icon="settings"/>
+          <q-item-main label="Mon compte"/>
         </q-item>
-        <q-item @click="deconnexion()">
-          <q-item-side icon="fas fa-sign-out-alt" />
+        <q-item @click.native="deconnexion()">
+          <q-item-side icon="fas fa-sign-out-alt"/>
           <q-item-main label="Déconnexion"/>
         </q-item>
       </q-list>
     </q-layout-drawer>
+    <q-layout-footer>
+      <q-toolbar :inverted="$q.theme === 'ios'">
+        <q-toolbar-title>Footer</q-toolbar-title>
+      </q-toolbar>
+    </q-layout-footer>
     <q-page-container>
-      <router-view />
+      <router-view/>
     </q-page-container>
   </q-layout>
 </template>
@@ -85,11 +105,14 @@ export default {
   },*/
   name: "MyLayout",
   computed: {
+    user() {
+      return this.$store.state.utilisateur.utilisateur;
+    },
     nomPrenom() {
       return (
-        this.$store.state.utilisateur.prenom +
+        this.$store.state.utilisateur.utilisateur.prenom +
         " " +
-        this.$store.state.utilisateur.nom
+        this.$store.state.utilisateur.utilisateur.nom
       );
     }
   },
@@ -114,6 +137,7 @@ export default {
   methods: {
     openURL,
     deconnexion() {
+      console.log("hello");
       this.$store.commit("utilisateur/deconnexion");
       this.$router.push("/profil/login");
     },
@@ -145,6 +169,9 @@ export default {
   mounted() {
     this.timerID = setInterval(this.updateTime, 1000);
     this.updateTime();
+  },
+  destroyed() {
+    this.$store.commit("utilisateur/DECONNEXION");
   }
 };
 </script>

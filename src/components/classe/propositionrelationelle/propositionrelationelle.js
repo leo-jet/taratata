@@ -9,18 +9,31 @@ export default {
   data() {
     return {
       enonce1: "",
-      enonce2: "" 
+      enonce2: "",
+      newProposition: false
+    }
+  },
+  computed: {
+    propositions() {
+      return this.$store.state.question.propositions
     }
   },
   methods: {
-    
+    fermer() {
+      this.newProposition = false
+    },
+    deleteProposition(index){
+      this.$store.commit('question/DELETE_PROPOSITION', index)
+    },
+    creerProposition() {
+      let data = {
+        "enonce1": this.enonce1,
+        "enonce2": this.enonce2,
+      }
+      this.$store.commit('question/ADD_PROPOSITION', data)
+      this.newProposition = false
+    }
   },
-  mounted() {
-    axios.defaults.headers.common['Access-Control-Allow-Origin'] = "*"
-    axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true
-    axios.defaults.headers.common['Authorization'] = "JWT " + this.$store.state.utilisateur.token
-    axios.defaults.headers.common['Content-Type'] = 'multipart/form-data'
-  },
-  destroyed() {
-  }
+  mounted() {},
+  destroyed() {}
 }

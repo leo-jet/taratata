@@ -1,0 +1,32 @@
+<section>
+  <q-card inline class="q-ma-sm" style="width:100%">
+    <q-item>
+      <q-item-side>
+        <span class="fa-stack">
+          <span class="fa fa-circle-o fa-stack-3x"></span>
+          <strong class="fa-stack-3x">
+            {{chapitre.numero}}
+          </strong>
+        </span>
+      </q-item-side>
+      <q-item-main>
+        <q-item-tile label>{{chapitre.titre}}</q-item-tile>
+        <q-item-tile sublabel>Debut: {{chapitre.dateDebut}} | Fin: {{chapitre.dateFin}}</q-item-tile>
+      </q-item-main>
+    </q-item>
+    <card-main>
+      <q-list highlight>
+        <q-list-header>Sections</q-list-header>
+        <q-item v-for="section in chapitre.sections">
+          <q-item-main>
+            {{section.titre}}
+          </q-item-main>
+          <q-item-side right>
+            <q-icon name="fas fa-play" color="green"
+              @click.native="playSection(chapitre.titre, chapitre.id, section.titre, section.id)"></q-icon>
+          </q-item-side>
+        </q-item>
+      </q-list>
+    </card-main>
+  </q-card>
+</section>

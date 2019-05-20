@@ -2,6 +2,10 @@ import axios from 'axios'
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = "*"
 axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true
 axios.defaults.headers.common['Content-Type'] = 'multipart/form-data'
+import {
+  fb,
+  classesCollection
+} from 'assets/javascript/firebase.js'
 
 export const get_classe = async ({
   commit
@@ -29,13 +33,14 @@ export const get_classes = async ({
 export const get_all_classes = async ({
   commit
 }, data) => {
-  let token = data.token
-  axios.defaults.headers.common['Authorization'] = "JWT " + token
-  let url = (data.self.$q.platform.is.mobile && process.env.DEV) ? "http://10.0.2.2:8000/classe/list/?" + data.filter : process.env.API + "/classe/list/?" + data.filter
-  console.log(url)
-  return axios.get(url).then((response) => {
-    commit('SET_CLASSES', response.data)
-  })
+  var classesQuery = await classesCollection.get()
+  var classes = []
+  for(var classe of classesQuery.docs){
+    var cls = classe.data()
+    cls.id = classe.id
+    classes.push(cls)
+  }
+  commit('SET_CLASSES', classes)
 }
 
 
@@ -277,3 +282,61 @@ export const envoi_feuille = ({
 }
 
 
+export const detail_classe = ({
+  commit
+}, data) => {
+  axios.defaults.headers.common['Authorization'] = "JWT " + data.token
+  let url = (data.self.$q.platform.is.mobile && process.env.DEV) ? "http://10.0.2.2:8000" : process.env.API
+  url = url + data.classeUrl
+  return new Promise((resolve, reject) => {
+    try {
+      axios.get(url, {
+          params: data.parameters
+        }).then((response) => {
+          commit('GET_CLASSE', response.data)
+          resolve({
+            status: true,
+            data: response.data
+          })
+        })
+        .catch((error) => {
+          reject({
+            status: false,
+            data: error.response
+          })
+        })
+    } catch (e) {
+      console.log(e);
+    }
+  });
+}
+
+export const get_chapitres_with_sections = async ({
+  commit
+}, data) => {
+  try {
+    var n = null
+    var chapitresSnap = await data.classeRef.collection('chapitres').orderBy('numero').get()
+    var chapitres = []
+    var chap = null
+    for (var chapitre of chapitresSnap.docs) {
+      chap = chapitre.data()
+      chap.label = chap.titre
+      chap.id = chapitre.id
+      chap.sections = []
+      let sectionssRef = await data.classeRef.collection('chapitres').doc(chapitre.id).collection('sections').orderBy('numero').get();
+      for (var sections of sectionssRef.docs) {
+        var section = sections.data()
+        section.label = section.titre
+        section.value = sections.id
+        chap.sections.push(section)
+      }
+      chap.value = chap
+
+      chapitres.push(chap)
+    }
+    commit('GET_CHAPITRES_CLASSE', chapitres)
+  } catch (e) {
+    console.log(e);
+  }
+}

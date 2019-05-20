@@ -1,4 +1,7 @@
 import axios from 'axios';
+import {
+  classesCollection
+} from "assets/javascript/firebase.js";
 export default {
   components: {},
   computed: {},
@@ -81,7 +84,7 @@ export default {
   },
   computed: {
     classes() {
-      return this.$store.state.classe.classes
+      return []
     }
   },
   methods: {
@@ -98,7 +101,12 @@ export default {
           message: message,
         })
       })**/
-      let next = '/classe/' + classe.idClass
+      let next = '/classe/' + classe.id
+      this.$router.push(next)
+    },
+    async creerClasse(){
+      var classe = await classesCollection.add({})
+      let next = '/classe/' + classe.id
       this.$router.push(next)
     },
     get_enseignant_classe(classe) {

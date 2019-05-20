@@ -2,30 +2,74 @@ import axios from 'axios';
 import question from "components/classe/dialogs/question/question.vue";
 import devoir from "components/classe/dialogs/devoir/devoir.vue";
 import questionAffichage from "components/question/question.vue";
+import {
+  sectionsCollection,
+  classesCollection
+} from 'assets/javascript/firebase.js'
 export default {
   props: ["modalQuiz"],
   components: {
     question,
-    questionAffichage, 
+    questionAffichage,
     devoir
   },
   computed: {
-    classes(){
-      return this.$store.state.classe.classes
+    classes() {
+      var cls = this.$store.state.classe.classe
+      var clstree = {
+        id: cls.id,
+        label: cls.nom,
+        icon: "fas fa-chalkboard-teacher",
+        children: []
+      }
+      var chaps = this.$store.state.classe.chapitres
+      console.log(chaps)
+      for (var chapitre of chaps) {
+        var sections = []
+        for (var section of chapitre.sections) {
+          sections.push({
+            id: section.value,
+            label: section.titre,
+            icon: "fas fa-hand-point-right"
+          })
+        }
+        clstree.children.push({
+          id: chapitre.titre,
+          label: chapitre.titre,
+          icon: "fas fa-list-alt",
+          children: sections
+        })
+      }
+      return [clstree]
     },
-    panier(){
-      return this.$store.state.quiz.questions
+    panier() {
+      return []
     },
-    questions(){
-      return this.$store.state.question.questions
+    classeRef() {
+      return classesCollection.doc(this.$route.params.idClasse)
     }
   },
   name: 'classe_dialog_quiz',
+  watch: {
+    async ticked(sections) {
+      var questions = []
+      for (var id of sections) {
+        var quest = await sectionsCollection.doc(id).collection("questions").get()
+        for (var doc of quest.docs) {
+          var q = doc.data()
+          q.id = doc.id
+          questions.push(q)
+        }
+      }
+      this.questions = questions
+    }
+  },
   data() {
     return {
       modalDevoir: false,
       rows_per_page_options: [0, 0],
       filter: "",
+      questions: [],
       columns: [{
           name: 'desc',
           required: true,
@@ -93,6 +137,7 @@ export default {
       }],
       modalQuestion: false,
       selected: null,
+      selectedtest: null,
       ticked: [],
       tickStrategy: 'leaf',
       tickFilter: null,
@@ -112,22 +157,25 @@ export default {
     },
     creerQuestion() {
       this.modalQuestion = true
-    }, 
-    creerDevoir(){
+    },
+    creerDevoir() {
       this.modalDevoir = true
     },
-    get_question(){
+    get_question() {
       let data = {
-        "token": this.$store.state.utilisateur.token, 
+        "token": this.$store.state.utilisateur.token,
         "selections": this.ticked
       }
-      this.$store.dispatch('question/get_questions_with_selection', data)
+      console.log(this.ticked)
     }
   },
   mounted() {
-    let data = {
-      "token": this.$store.state.utilisateur.token
+    var classes = this.$store.state.classe.chapitres
+    if (classes == undefined) {
+      let data = {
+        "classeRef": this.classeRef
+      }
+      this.$store.dispatch('classe/get_chapitres_with_sections', data)
     }
-    this.$store.dispatch('classe/get_classe_for_tree', data)
   },
 }

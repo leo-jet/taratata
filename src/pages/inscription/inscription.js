@@ -6,6 +6,10 @@ import {
   minLength
 } from 'vuelidate/lib/validators'
 import {
+  fb,
+  elevesCollection
+} from 'assets/javascript/firebase.js'
+import {
   telephoneValidator,
   confimationpass
 } from 'assets/javascript/validators'
@@ -16,6 +20,7 @@ export default {
     return {
       nom: "",
       prenom: "",
+      email: "",
       dateNaissance: "",
       numero: "",
       code: "",
@@ -24,12 +29,6 @@ export default {
     }
   },
   validations: {
-    numero: {
-      required,
-      integer,
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    },
     prenom: {
       required,
     },
@@ -47,26 +46,28 @@ export default {
   methods: {
     async enregistrement() {
       if (this.$v.$invalid == false) {
-        let formData = new FormData()
-        formData.append("nom", this.nom)
-        formData.append("pass", this.pass)
-        formData.append("prenom", this.prenom)
-        formData.append("numero", this.numero)
-        let data = {
-          "token": this.$store.state.utilisateur.token,
-          "self": this,
-          "formData": formData
-        }
-        try {
-          this.$q.loading.show()
-          let promiseEnregistrement = await this.$store.dispatch('utilisateur/enregistrement', data)
-          this.$q.loading.hide()
-          if(promiseEnregistrement.status == true){
-            this.$router.push('/profil/confirmation')
-          }
-        } catch (e) {
-          console.log(e)
-        }
+        var self = this
+        fb.auth().createUserWithEmailAndPassword(self.email, self.pass).then(user => {
+          var user = fb.auth().currentUser;
+
+          user.sendEmailVerification().then(function () {
+            console.log("email sent")
+          }).catch(function (error) {
+            console.log("error")
+          });
+          // create user obj
+          elevesCollection.doc(self.email).set({
+            nom: self.nom,
+            prenom: self.prenom,
+            email: self.email
+          }).then(() => {
+            console.log("create")
+          }).catch(err => {
+            console.log(err)
+          })
+        }).catch(err => {
+          console.log(err)
+        })
       }
     },
     annuler() {

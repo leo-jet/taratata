@@ -1,6 +1,13 @@
+import {
+  utilisateursCollection
+} from 'assets/javascript/firebase.js'
 export default {
   components: {},
-  computed: {},
+  computed: {
+    email() {
+      return this.$store.state.utilisateur.utilisateur.email
+    }
+  },
   data() {
     return {
       edition: false,
@@ -23,39 +30,28 @@ export default {
       this.edition = true
     },
     async enregistrement() {
-      let formData = new FormData()
-      formData.append("nom", this.nom)
-      formData.append("prenom", this.prenom)
-      formData.append("numero", this.numero)
       let date = this.dateNaissance.split(' ')[0]
       let dateSplit = date.split('/')
       let formatDate = dateSplit[0] + "-" + dateSplit[1] + "-" + dateSplit[2]
-      formData.append("dateNaissance", formatDate)
-      formData.append("lieuNaissance", this.lieuNaissance)
-      formData.append("telephone", this.numero)
-      let data = {
-        "token": this.$store.state.utilisateur.token,
-        "self": this,
-        "formData": formData,
-        "id": this.$store.state.utilisateur.id
+      let formData = {
+        "nom": this.nom,
+        "prenom": this.prenom,
+        "numero": this.numero,
+        "dateNaissance": formatDate,
+        "lieuNaissance": this.lieuNaissance,
+        "telephone": this.numero,
+        "email": this.email,
+        "type": "eleve"
       }
-      try {
-        this.$q.loading.show()
-        let promiseEnregistrement = await this.$store.dispatch('utilisateur/editer_information', data)
-        promiseEnregistrement.then((response) => {
-          console.log(response)
-        })
-      } catch (e) {
-        console.log(e)
-        this.$q.loading.hide()
-      }
+      utilisateursCollection.doc(this.email).update(formData)
+      this.$store.dispatch("utilisateur/get_user", {email: this.email})
     }
   },
   mounted() {
-    this.nom = this.$store.state.utilisateur.nom
-    this.prenom = this.$store.state.utilisateur.prenom
-    this.dateNaissance = this.$store.state.utilisateur.dateNaissance
-    this.lieuNaissance = this.$store.state.utilisateur.lieuNaissance
-    this.numero = this.$store.state.utilisateur.telephone
+    this.nom = this.$store.state.utilisateur.utilisateur.nom
+    this.prenom = this.$store.state.utilisateur.utilisateur.prenom
+    this.dateNaissance = this.$store.state.utilisateur.utilisateur.dateNaissance
+    this.lieuNaissance = this.$store.state.utilisateur.utilisateur.lieuNaissance
+    this.numero = this.$store.state.utilisateur.utilisateur.telephone
   }
 };

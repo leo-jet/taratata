@@ -5,109 +5,103 @@
         Créer une nouvelle question
         <div slot="subtitle">Formulaire de création d'une nouvelle question </div>
       </q-toolbar-title>
-      <q-btn color="green" @click.native="enregistrer()" style="margin-right: 10px">enregistrer</q-btn>
+      <q-btn color="green" @click.native="creerQuestion()" style="margin-right: 10px">enregistrer</q-btn>
       <q-btn color="red" @click.native="fermer()">fermer</q-btn>
     </q-toolbar>
-    <div style="padding: 15px" v-if="question == null">
-      <div class="row">
-        <div class="col-12">
-          <q-select v-model="classe" float-label="Classe" :options="classes" @input="classeChange" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <q-select v-model="chapitre" float-label="Chapitre" :options="chapitres" @input="chapitreChange" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <q-select v-model="section" float-label="Section" :options="sections" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <q-select v-model="type" float-label="Type de question" :options="types" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <q-input v-model.lazy="enonce" float-label="Enoncé" type="textarea" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <q-input v-model.lazy="explication" float-label="Explication" type="textarea" />
-        </div>
-      </div>
-      <div class="row" v-if="type=='schema'">
-        <div class="col-12">
-          <input type="file" ref="image" id="avatar" name="avatar" accept="image/png, image/jpeg">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <q-input v-model.lazy="numero" float-label="Numéro" type="number" />
-        </div>
-      </div>
-      <div class="row" style="padding: 10px">
-        <div class="col-12">
-          <q-btn color="green" @click.native="creerQuestion()">creer</q-btn>
-        </div>
-      </div>
-    </div>
-    <div v-else>
-      <div class="row">
-        <div class="col-12">
-          Classe: {{classe}}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          Chapitre: {{chapitre}}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          Section: {{section}}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          Type de question: {{question.type}}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          Enoncé: {{question.enonce}}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          Explication: {{question.explication}}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          Numero: {{question.numero}}
-        </div>
-      </div>
-      <h6>
-        Propositions
-        <q-btn icon="add" @click="clickAddQuestion()"></q-btn>
-      </h6>
-      <propositionqcm :addQuestion.sync="addQuestion" v-if="question.type == 'qcm' && addQuestion==true"></propositionqcm>
-      <propositionrelationelle :addQuestion.sync="addQuestion" v-if="question.type == 'qcr' && addQuestion==true"></propositionrelationelle>
-      <propositionschema :addQuestion.sync="addQuestion" v-if="question.type == 'schema' && addQuestion==true"></propositionschema>
-      <div v-if="question.type == 'qcm'">
-        <div class="row" v-for="(proposition,index) in propositions" :key="index">
-          <div class="col-9">
-            {{proposition.enonce}}
-          </div>
-          <div class="col-3">
-            Solution: {{proposition.solution}}
+    <q-stepper ref="stepper" v-model="step" color="primary">
+      <q-step default name="general" title="General" subtitle="Configuration générale de la question">
+        <div class="row">
+          <div class="col-12">
+            <q-select v-model="chapitre" :options="chapitres" @input="chapitreChange" />
           </div>
         </div>
-      </div>
-    </div>
+        <div class="row">
+          <div class="col-12">
+            <q-select v-model="section" :options="sections" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <q-select v-model="type" :options="types" />
+          </div>
+        </div>
+        <q-stepper-navigation v-if="!globalNavigation">
+          <q-btn class="q-ml-sm" color="green" @click="$refs.stepper.next()">Valider</q-btn>
+        </q-stepper-navigation>
+      </q-step>
+
+      <q-step name="enonce" :error="stepError" title="Enonce de la question" subtitle="Obligatoire">
+        <div class="row">
+          <div class="col-12">
+            <quill-editor v-model="enonce" style="padding: 15px" :options="editorOption">
+            </quill-editor>
+          </div>
+        </div>
+
+        <q-stepper-navigation v-if="!globalNavigation">
+          <q-btn color="green" @click="$refs.stepper.next()">Continuer</q-btn>
+          <q-btn class="q-ml-sm" color="primary" flat @click="$refs.stepper.previous()">Précédent</q-btn>
+        </q-stepper-navigation>
+      </q-step>
+
+      <q-step name="propositions" :disable="disabledStep" title="Proposition" subtitle="Obligatoire">
+        <propositionqcm :addQuestion.sync="addQuestion" v-if="type == 'qcm'"></propositionqcm>
+        <propositionrelationelle :addQuestion.sync="addQuestion" v-if="type == 'qcr'"></propositionrelationelle>
+        <propositionschema :addQuestion.sync="addQuestion" v-if="type == 'schema'"></propositionschema>
+
+        <q-stepper-navigation v-if="!globalNavigation">
+          <q-btn color="green" @click="$refs.stepper.next()">Continuer</q-btn>
+          <q-btn class="q-ml-sm" color="red" flat @click="$refs.stepper.previous()">précédent</q-btn>
+        </q-stepper-navigation>
+      </q-step>
+
+      <q-step name="Explication de la solution" title="Explication" subtitle="Détail de la solution">
+        <div class="row">
+          <div class="col-12">
+            <quill-editor v-model="explication" :options="editorOption">
+            </quill-editor>
+          </div>
+        </div>
+
+        <q-stepper-navigation v-if="!globalNavigation">
+          <q-btn color="green" @click="$refs.stepper.next()">Continuer</q-btn>
+          <q-btn class="q-ml-sm" color="red" flat @click="$refs.stepper.previous()">précédent</q-btn>
+        </q-stepper-navigation>
+      </q-step>
+
+      <q-step name="fin" title="Fin" subtitle="Vue d'ensemble de la question">
+        <div class="row">
+          <div class="col-12">
+            <quill-editor v-model="enonce" disabled style="padding: 10px" :options="editorOptionHideToolbar">
+            </quill-editor>
+          </div>
+        </div>
+        <propositionqcm :addQuestion.sync="addQuestion" v-if="type == 'qcm'"></propositionqcm>
+        <propositionrelationelle :addQuestion.sync="addQuestion" v-if="type == 'qcr'"></propositionrelationelle>
+        <propositionschema :addQuestion.sync="addQuestion" v-if="type == 'schema'"></propositionschema>
+        <div class="row">
+          <div class="col-12">
+            <quill-editor v-model="explication" style="padding: 10px" disabled :options="editorOptionHideToolbar">
+            </quill-editor>
+          </div>
+        </div>
+        <q-stepper-navigation v-if="!globalNavigation">
+          <q-btn color="primary" @click="$refs.stepper.goToStep('general')">Restart</q-btn>
+          <q-btn class="q-ml-sm" color="primary" flat @click="$refs.stepper.previous()">Back</q-btn>
+        </q-stepper-navigation>
+      </q-step>
+
+      <q-stepper-navigation v-if="globalNavigation">
+        <q-btn v-if="step !== 'general'" color="primary" flat @click="$refs.stepper.previous()">
+          Back
+        </q-btn>
+
+        <q-btn class="q-ml-sm" color="primary" @click="$refs.stepper.next()">
+          {{ step === 'fin' ? 'Finalize' : 'Next' }}
+        </q-btn>
+      </q-stepper-navigation>
+
+      <q-inner-loading :visible="progress" />
+    </q-stepper>
   </q-modal>
 </div>

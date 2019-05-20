@@ -4,7 +4,7 @@ export default {
   components: {
     chapitres
   },
-  name: 'classe_dialog',
+  name: 'classedialog',
   data() {
     return {}
   },

@@ -5,6 +5,6 @@ export default {
   testDB: "",
   quiz: null,
   quizs: null,
-  questions: null, 
+  questions: [], 
   statistique: null
 }

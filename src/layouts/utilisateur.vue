@@ -31,14 +31,19 @@
           icon="menu"
         />
         <q-btn color="info" to="/" style="margin-right:10px" v-if="$q.platform.is.desktop">ACCUEIL</q-btn>
-        <q-btn color="yellow" to="/profil/confirmation" style="margin-right:10px" v-if="$q.platform.is.desktop">Valider son compte</q-btn>
+        <q-btn
+          color="yellow"
+          to="/profil/confirmation"
+          style="margin-right:10px"
+          v-if="$q.platform.is.desktop"
+        >Professionnel de l'éducation</q-btn>
         <q-btn-dropdown
           color="info"
           :label="nomPrenom"
           v-if="$q.platform.is.desktop && $store.state.utilisateur.connecte==true"
         >
           <q-list link>
-            <q-item v-close-overlay to="">
+            <q-item v-close-overlay to="/compte">
               <q-item-side icon="fas fa-user" inverted color="primary"/>
               <q-item-main>
                 <q-item-tile label>Profil</q-item-tile>
@@ -70,17 +75,25 @@
           <q-item-side icon="fas fa-sign-out-alt"/>
           <q-item-main label="Déconnexion"/>
         </q-item>
+        <q-item to="/profil/login" v-if="$store.state.utilisateur.connecte==false">
+          <q-item-side icon="settings"/>
+          <q-item-main label="Connexion"/>
+        </q-item>
+        <q-item to="/profil/inscription" v-if="$store.state.utilisateur.connecte==false">
+          <q-item-side icon="fas fa-sign-out-alt"/>
+          <q-item-main label="Enrégistrement"/>
+        </q-item>
       </q-list>
     </q-layout-drawer>
 
     <q-page-container>
-      <!-- This is where pages get injected -->
       <router-view/>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
+import { fb, utilisateursCollection } from "assets/javascript/firebase.js";
 export default {
   // name: 'LayoutName',
   computed: {
@@ -96,6 +109,38 @@ export default {
     return {
       mobileMenu: false
     };
+  },
+  method: {
+    deconnexion() {
+      console.log("hello");
+      this.$store.commit("utilisateur/deconnexion");
+      this.$router.push("/profil/login");
+    }
+  },
+  mounted() {
+    /*
+    // Ceci était utilisé pour contrôler si un utilisateur est loggé
+    let self = this;
+    fb.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        user
+          .sendEmailVerification()
+          .then(function() {
+            console.log("email sent");
+          })
+          .catch(function(error) {
+            console.log("error");
+          });
+        let data = {
+          email: user.email
+        };
+        self.$store.dispatch("utilisateur/get_user", data);
+      } else {
+        // User is signed out.
+        // ...
+      }
+    });
+    */
   }
 };
 </script>

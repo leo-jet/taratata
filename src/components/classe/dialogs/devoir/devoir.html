@@ -8,15 +8,20 @@
       <q-btn color="green" @click.native="creerDevoir()" style="margin-right: 10px">enregistrer</q-btn>
       <q-btn color="red" @click.native="fermer()">fermer</q-btn>
     </q-toolbar>
-    <div style="padding: 15px">
-      <div class="row">
+    <div class="q-pa-sm">
+      <!--<div class="row">
         <div class="col-12">
           <q-select v-model="classe" float-label="Classe" :options="classes" @input="classeChange" />
+        </div>
+      </div>-->
+      <div class="row">
+        <div class="col-12">
+          <q-select v-model="chapitre" float-label="Chapitre" :options="chapitres" @input="chapitreChange" />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <q-select v-model="chapitre" float-label="Chapitre" :options="chapitres" @input="chapitreChange" />
+          <q-select v-model="section" float-label="Section" :options="sections" />
         </div>
       </div>
       <div class="row">
@@ -35,7 +40,7 @@
         </div>
         <div class="col-1">
           <q-input v-model.lazy="nombreEssai" float-label="Essai" type="number" />
-        </div> 
+        </div>
         <div class="col-4">
           <q-toggle v-model="correction" color="teal-8" label="Auto-correction" />
         </div>

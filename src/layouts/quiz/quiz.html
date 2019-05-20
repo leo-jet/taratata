@@ -1,0 +1,39 @@
+<section>
+  <q-layout :view="view">
+    <q-layout-header>
+      <q-toolbar :inverted="$q.theme === 'ios'">
+        <q-toolbar-title>
+          {{$store.state.quiz.quiz.titre}}
+          <span slot="subtitle">
+            <span id="time" v-html="time"></span>
+          </span>
+        </q-toolbar-title>
+        # {{indiceQuestionCourante + 1}}/ {{questions.length}}
+        <q-btn round style="margin-left:10px;" @click="showQuestions()" color="green" icon="menu" />
+      </q-toolbar>
+    </q-layout-header>
+    <q-page-container>
+      <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" mode="out-in">
+        <router-view />
+      </transition>
+    </q-page-container>
+    <q-layout-footer>
+      <q-toolbar color="primary" dark class="elevation-0">
+        <q-btn @click="terminer()" :disable="correction" color="green" label="terminer" />
+        <q-toolbar-title>
+          <span v-if="correction == true">
+            <b>Score: </b> {{score}} / {{questions.length}}
+          </span>
+        </q-toolbar-title>
+        <q-btn flat color="yellow" v-if="indiceQuestionCourante>0" @click="previousQuestion()"
+          icon="fas fa-step-backward" />
+        <q-btn flat color="yellow" v-if="indiceQuestionCourante != questions.length -1" @click="nextQuestion()"
+          icon="fas fa-step-forward" />
+        |
+        <q-btn flat color="yellow" v-if="this.$data.state != 'paused'" @click="pause()" icon="fas fa-pause-circle" />
+        <q-btn flat color="yellow" v-if="this.$data.state == 'paused'" @click="resume()" icon="fas fa-redo" />
+        <q-btn flat color="red" @click="close()" icon="fas fa-stop-circle" />
+      </q-toolbar>
+    </q-layout-footer>
+  </q-layout>
+</section>
