@@ -38,10 +38,10 @@
         <q-btn-dropdown
           color="info"
           :label="nomPrenom"
-          v-else
+          v-if="$q.platform.is.desktop && $store.state.utilisateur.utilisateur != undefined"
         >
           <q-list link>
-            <q-item v-close-overlay to="/compte" v-if="user.type == 'enseignant'">
+            <q-item v-close-overlay to="/compte" v-if="user != undefined && user.type == 'enseignant'">
               <q-item-side icon="fas fa-user" inverted color="primary"/>
               <q-item-main>
                 <q-item-tile label>Profil</q-item-tile>
@@ -109,11 +109,11 @@ export default {
       return this.$store.state.utilisateur.utilisateur;
     },
     nomPrenom() {
-      return (
-        this.$store.state.utilisateur.utilisateur.prenom +
+      return 
+        (this.$store.state.utilisateur.utilisateur)?"None":this.$store.state.utilisateur.utilisateur.prenom +
         " " +
         this.$store.state.utilisateur.utilisateur.nom
-      );
+  
     }
   },
   data() {

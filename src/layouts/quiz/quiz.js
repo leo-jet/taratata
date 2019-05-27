@@ -12,56 +12,6 @@ export default {
   },
   data() {
     return {
-      score: 0,
-      correction: false,
-      options: [{
-          label: 'Google',
-          value: 'goog'
-        },
-        {
-          label: 'Facebook',
-          value: 'fb'
-        },
-        {
-          label: 'Twitter',
-          value: 'twtr'
-        },
-        {
-          label: 'Apple Inc.',
-          value: 'appl'
-        },
-        {
-          label: 'Oracle',
-          value: 'ora'
-        }
-      ],
-      selectModel: "",
-      propositions: {
-        type: "qcm",
-        lists: [{
-            id: "a",
-            enonce: "proposition A",
-            solution: false,
-            checked: true
-          },
-          {
-            id: "b",
-            enonce: "proposition B",
-            solution: true,
-            checked: false
-          },
-          {
-            id: "c",
-            enonce: "proposition C",
-            solution: false,
-            checked: false
-          }
-        ]
-      },
-      check4: true,
-      check5: false,
-      check6: true,
-      state: "started",
       questionListDrawer: false,
       startTime: 0,
       currentTime: 0,
@@ -69,36 +19,7 @@ export default {
     };
   },
   async mounted() {
-    this.interval = setInterval(this.updateCurrentTime, 1000);
-    var idClasse = this.$route.params.idClasse
-    var classeDoc = await classesCollection.doc(idClasse).get()
-    var classe = null
-    if (classeDoc.exists == true) {
-      classe = classeDoc.data()
-      classe.id = classeDoc.id
-    }
-    var idChapitre = this.$route.params.idChapitre
-    var chapitreDoc = await classeDoc.ref.collection("chapitres").doc(idChapitre).get()
-    var chapitre = null
-    if(chapitreDoc.exists == true){
-      chapitre = chapitreDoc.data()
-      chapitre.id = chapitreDoc.id
-    }
-    var idSection = this.$route.params.idSection
-    var sectionDoc = await chapitreDoc.ref.collection("sections").doc(idSection).get()
-    var section = null
-    if(sectionDoc.exists == true){
-      section = sectionDoc.data()
-      section.id =sectionDoc.id
-    }
-    var idDevoir = this.$route.params.idDevoir
-    var devoirDoc = await sectionDoc.ref.collection("devoirs").doc(idDevoir).get()
-    var devoir = null 
-    if(devoirDoc.exists == true){
-      devoir = devoirDoc.data()
-      devoir.id = devoirDoc.id
-    }
-    this.$store.commit("quiz/SET_QUIZ", devoir)
+    
   },
   destroyed: function () {
     clearInterval(this.interval);
@@ -138,9 +59,6 @@ export default {
     }
   },
   methods: {
-    urlBegin(path) {
-      return (this.$q.platform.is.mobile && process.env.DEV) ? "http://10.0.2.2:8000" + path : process.env.API + path
-    },
     removeChip(index) {
       if (this.correction == false) {
         this.questions[this.indiceQuestionCourante].propositions.lists[index].proposition = null
@@ -164,66 +82,6 @@ export default {
     },
     resume: function () {
       this.$data.state = "started";
-    },
-    async corriger() {
-      let point = 0
-      let feuille = []
-      for (var i in this.questions) {
-        let myquestion = {
-          id: this.questions[i].id,
-          type: this.questions[i].type
-        }
-        console.log("hello")
-        let mypropositions = []
-        if (this.questions[i].type == "qcm") {
-          let reponsefausse = false
-          for (var j in this.questions[i].propositions.lists) {
-            mypropositions.push({
-              checked: this.questions[i].propositions.lists[j].checked,
-              solution: this.questions[i].propositions.lists[j].solution
-            })
-            console.log(this.questions[i].propositions.lists[j].checked, this.questions[i].propositions.lists[j].solution)
-            if (this.questions[i].propositions.lists[j].checked != this.questions[i].propositions.lists[j].solution) {
-              reponsefausse = true
-            }
-          }
-          if (reponsefausse == false) {
-            point = point + 1
-          }
-        }
-        if (this.questions[i].type == "schema") {
-          let reponsefausse = false
-          for (var j in this.questions[i].propositions.lists) {
-            mypropositions.push({
-              proposition: this.questions[i].propositions.lists[j].proposition,
-              solution: this.questions[i].propositions.lists[j].solution
-            })
-            console.log(this.questions[i].propositions.lists[j].proposition, this.questions[i].propositions.lists[j].solution)
-            if (this.questions[i].propositions.lists[j].proposition != this.questions[i].propositions.lists[j].solution) {
-              reponsefausse = true
-            }
-          }
-          if (reponsefausse == false) {
-            point = point + 1
-          }
-        }
-        myquestion.propositions = mypropositions
-        feuille.push(myquestion)
-      }
-      let formData = new FormData()
-      let data = {
-        "token": this.$store.state.utilisateur.token,
-        "self": this
-      }
-      let score = point / this.questions.length
-      formData.append("note", Math.round(score * 100))
-      formData.append("idDevoir", this.$store.state.quiz.quiz.id)
-      formData.append("reponses", JSON.stringify(feuille))
-      let time = this.hours * 3600 + this.minutes * 60 + this.seconds
-      formData.append("duree", time)
-      data.formData = formData
-      let promiseEnvoiFeuille = await this.$store.dispatch('classe/envoi_feuille', data)
-      this.score = point
     },
     updateCurrentTime: function () {
       if (this.$data.state == "started") {

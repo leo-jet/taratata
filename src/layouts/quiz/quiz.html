@@ -1,9 +1,8 @@
 <section>
-  <q-layout :view="view">
+  <q-layout view="lHh Lpr lFf">
     <q-layout-header>
       <q-toolbar :inverted="$q.theme === 'ios'">
         <q-toolbar-title>
-          {{$store.state.quiz.quiz.titre}}
           <span slot="subtitle">
             <span id="time" v-html="time"></span>
           </span>
@@ -35,5 +34,6 @@
         <q-btn flat color="red" @click="close()" icon="fas fa-stop-circle" />
       </q-toolbar>
     </q-layout-footer>
+    <questions-list :questionListDrawer.sync="questionListDrawer" :questions.sync="questions"></questions-list>
   </q-layout>
 </section>

@@ -1,3 +1,6 @@
+import {
+  classesCollection
+} from 'assets/javascript/firebase.js'
 import questionsList from "components/questionsList/questionsList.vue";
 export default {
   components: {
@@ -65,9 +68,51 @@ export default {
       interval: null
     };
   },
-  mounted() {
+  async mounted() {
     this.interval = setInterval(this.updateCurrentTime, 1000);
-    console.log(this.$store.state.quiz.questions)
+    var idClasse = this.$route.params.idClasse
+    var classeDoc = await classesCollection.doc(idClasse).get()
+    var classe = null
+    if (classeDoc.exists == true) {
+      classe = classeDoc.data()
+      classe.id = classeDoc.id
+      console.log(classe)
+    }
+    var idChapitre = this.$route.params.idChapitre
+    var chapitreDoc = await classeDoc.ref.collection("chapitres").doc(idChapitre).get()
+    var chapitre = null
+    if (chapitreDoc.exists == true) {
+      chapitre = chapitreDoc.data()
+      chapitre.id = chapitreDoc.id
+      console.log(chapitre)
+    }
+    var idSection = this.$route.params.idSection
+    var sectionDoc = await chapitreDoc.ref.collection("sections").doc(idSection).get()
+    var section = null
+    if (sectionDoc.exists == true) {
+      section = sectionDoc.data()
+      section.id = sectionDoc.id
+      console.log(section)
+    }
+    var idDevoir = this.$route.params.idDevoir
+    var devoirDoc = await sectionDoc.ref.collection("devoirs").doc(idDevoir).get()
+    var devoir = null
+    if (devoirDoc.exists == true) {
+      devoir = devoirDoc.data()
+      devoir.id = devoirDoc.id
+      console.log(devoir)
+    }
+    var questionFirebase = devoir.questions
+    for (var i in questionFirebase) {
+      var propositions = {
+        type: questionFirebase[i]["type"],
+        lists: questionFirebase[i]["propositions"]
+      }
+      questionFirebase[i]["propositions"] = propositions
+    }
+    console.log(questionFirebase)
+    this.$store.dispatch("quiz/set_questions", questionFirebase)
+    this.$store.commit("quiz/SET_QUIZ", devoir)
   },
   destroyed: function () {
     clearInterval(this.interval);
